@@ -136,8 +136,6 @@ void Engine::renderFrame()
 }
 
 
-
-
 void Engine::start()
 {
 	init();

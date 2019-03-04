@@ -2,7 +2,6 @@
 #include <fstream>
 
 #include "ShaderProgram.h"
-#include "errors.h"
 
 
 void ShaderProgram::compileShaders(const char *vertpath, const char *fragpath)

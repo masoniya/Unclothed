@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
-#include "Vertex.h"
 #include "ShaderProgram.h"
 
 
@@ -15,6 +14,7 @@ const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
+
 
 class Engine
 {
@@ -38,19 +38,13 @@ private:
 	void mainLoop();
 	void cleanup();
 	
-
 	void initWindow();
 	void initGlad();
 	void setFramebufferSize(int width, int height);
 	void initShaderProgram();
 	void createVertexObjects();
-
-	
-
 	
 	void processInput(GLFWwindow *window);
 	void renderFrame();
 
-
 };
-
