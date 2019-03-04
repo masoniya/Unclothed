@@ -4,98 +4,74 @@
 #include "ShaderProgram.h"
 #include "errors.h"
 
-//TODO : Clean up this mess of a class
 
-
-void ShaderProgram::init()
+void ShaderProgram::compileShaders(const char *vertpath, const char *fragpath)
 {
-	createShaders();
-	readShaders();
-	compileShaders();
-	createProgram();
+	uint32_t vertshaderid;
+	uint32_t fragshaderid;
+
+	vertshaderid = glCreateShader(GL_VERTEX_SHADER);
+	fragshaderid = glCreateShader(GL_FRAGMENT_SHADER);
+
+	compileShader(vertpath, vertshaderid);
+	compileShader(fragpath, fragshaderid);
+
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertshaderid);
+	glAttachShader(shaderProgram, fragshaderid);
+	glLinkProgram(shaderProgram);
+	
+	int success;
+	char infoLog[512];
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::string errorMessage("Shader program linking failed");
+		errorMessage += '\n';
+		throw std::runtime_error(errorMessage);
+	}
+
+	glDeleteShader(vertshaderid);
+	glDeleteShader(fragshaderid);
 }
 
-void ShaderProgram::start()
+void ShaderProgram::useProgram()
 {
 	glUseProgram(shaderProgram);
 }
 
-void ShaderProgram::readShaders()
+void ShaderProgram::compileShader(const char *path, uint32_t id)
 {
-	std::ifstream vertexIn;
-	std::ifstream fragmentIn;
-	std::string vertexSource;
-	std::string fragmentSource;
+	std::ifstream input(path);
+
+	std::string source;
 	std::string line;
 
-	vertexIn.open("shaders/shader.vert");
-	if (vertexIn.is_open()) {
-		while (std::getline(vertexIn, line)) {
-			vertexSource += line + '\n';
+	if (input.is_open()) {
+		while (std::getline(input, line)) {
+			source += line + '\n';
 		}
 	}
 	else {
-		logError("Vertex shader not found");
+		std::string errorMessage("Shader file " + *path);
+		errorMessage += " not found\n";
+		throw std::runtime_error(errorMessage);
 	}
-	vertexShaderSource = vertexSource.c_str();
-	vertexIn.close();
 
-	
-	fragmentIn.open("shaders/shader.frag");
-	if (fragmentIn.is_open()) {
-		while (std::getline(fragmentIn, line)) {
-			fragmentSource += line + '\n';
-		}
-	}
-	else {
-		logError("Fragment shader not found");
-	}
-	fragmentShaderSource = fragmentSource.c_str();
-	fragmentIn.close();
-	
-}
-
-void ShaderProgram::compileShaders()
-{
-	const char* tempContents = vertexShaderSource.c_str();
-	glShaderSource(vertexShader, 1, &tempContents, nullptr);
-	glCompileShader(vertexShader);
+	const char* tempContents = source.c_str();
+	glShaderSource(id, 1, &tempContents, nullptr);
+	glCompileShader(id);
 
 	int success;
 	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		glGetShaderInfoLog(id, 512, NULL, infoLog);
+		std::string errorMessage("Shader compilation failed " + *path);
+		errorMessage += '\n';
+		errorMessage += infoLog;
+		throw std::runtime_error(errorMessage);
 	}
-
-	const char* tempContents2 = fragmentShaderSource.c_str();
-	glShaderSource(fragmentShader, 1, &tempContents2, nullptr);
-	glCompileShader(fragmentShader);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-}
-
-void ShaderProgram::createShaders()
-{
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-}
-
-void ShaderProgram::createProgram()
-{
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
 }

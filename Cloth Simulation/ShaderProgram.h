@@ -8,21 +8,14 @@ class ShaderProgram
 {
 public:
 
-	void init();
-	void start();
-	
+	void compileShaders(const char* vertpath, const char* fragpath);
+	void useProgram();
 
 private:
-	std::string vertexShaderSource;
-	std::string fragmentShaderSource;
 
-	uint32_t vertexShader;
-	uint32_t fragmentShader;
 	uint32_t shaderProgram;
 
-	void createShaders();
-	void readShaders();
-	void compileShaders();
-	void createProgram();
+	void compileShader(const char* path, uint32_t id);
+
 };
 
