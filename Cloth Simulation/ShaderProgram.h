@@ -18,4 +18,3 @@ private:
 	void compileShader(const char* path, uint32_t id);
 
 };
-

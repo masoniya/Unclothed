@@ -1,19 +1,18 @@
 #pragma once
+#include <string>
+
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
-#include <string>
-
 #include "Vertex.h"
 #include "ShaderProgram.h"
-#include "errors.h"
 
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
-const std::string vertexShaderPath = "shaders/shader.vert";
-const std::string fragmentShaderPath = "shaders/shader.frag";
+const char* const vertexShaderPath = "shaders/shader.vert";
+const char* const fragmentShaderPath = "shaders/shader.frag";
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 

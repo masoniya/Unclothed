@@ -25,4 +25,3 @@ public:
 	Coords getCoords();
 
 };
-

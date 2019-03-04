@@ -1,7 +1,6 @@
 #include "Engine.h"
 
 
-
 void framebufferSizeCallback(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -20,7 +19,6 @@ Engine::Engine() : vertices{
 					}
 {
 }
-
 
 
 void Engine::init()
@@ -63,8 +61,7 @@ void Engine::initWindow()
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Engine", nullptr, nullptr);
 
 	if (window == nullptr) {
-		logError("Failed to create window.");
-		glfwTerminate();
+		throw std::runtime_error("Failed to create GLFW window");
 	}
 
 	glfwMakeContextCurrent(window);
@@ -73,8 +70,7 @@ void Engine::initWindow()
 void Engine::initGlad()
 {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		logError("Failed to initialize GLAD.");
-		glfwTerminate();
+		throw std::runtime_error("Failed to initialize GLAD.");
 	}
 }
 
@@ -86,7 +82,7 @@ void Engine::setFramebufferSize(int width, int height)
 
 void Engine::initShaderProgram()
 {
-	program.compileShaders(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
+	program.compileShaders(vertexShaderPath, fragmentShaderPath);
 }
 
 void Engine::createVertexObjects()
