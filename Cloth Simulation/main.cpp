@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 
+
 int main(int argc, char** argv) {
 
 	Engine engine;
@@ -11,6 +12,7 @@ int main(int argc, char** argv) {
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
+		getchar();
 		return EXIT_FAILURE;
 	}
 

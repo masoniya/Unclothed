@@ -11,6 +11,8 @@ public:
 
 	void compileShaders(const char* vertpath, const char* fragpath);
 	void useProgram();
+	void setUniformInt(const char* name, int value);
+	void setUniformFloat(const char* name, float value);
 
 private:
 

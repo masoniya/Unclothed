@@ -40,6 +40,16 @@ void ShaderProgram::useProgram()
 	glUseProgram(shaderProgram);
 }
 
+void ShaderProgram::setUniformInt(const char* name, int value)
+{
+	glUniform1i(glGetUniformLocation(shaderProgram, name), value);
+}
+
+void ShaderProgram::setUniformFloat(const char* name, float value)
+{
+	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
+}
+
 void ShaderProgram::compileShader(const char *path, uint32_t id)
 {
 	std::ifstream input(path);

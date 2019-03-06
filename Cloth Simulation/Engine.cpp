@@ -1,21 +1,13 @@
 #include "Engine.h"
 
 
-void framebufferSizeCallback(GLFWwindow *window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
-
-Engine::Engine() : vertices{ 
-						 0.5f,  0.5f, 0.0f,
-						 0.5f, -0.5f, 0.0f,
-						-0.5f, -0.5f, 0.0f,
-						-0.5f,  0.5f, 0.0f 
+Engine::Engine() :	vertices{ 
+						 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+						-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+						 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
 					},
 					indices{
-						0, 1, 3,
-						1, 2, 3
+						0, 1, 2,
 					}
 {
 }
@@ -24,20 +16,17 @@ Engine::Engine() : vertices{
 void Engine::init()
 {
 	initWindow();
-	initGlad();
-	setFramebufferSize(WIDTH, HEIGHT);
 	initShaderProgram();
 	createVertexObjects();
 }
 
 void Engine::mainLoop()
 {
-	while (!glfwWindowShouldClose(window)) {
-		processInput(window);
+	while (!glfwWindowShouldClose(window.getWindow())) {
+		processInput(window.getWindow());
 
 		renderFrame();
 
-		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 }
@@ -48,36 +37,13 @@ void Engine::cleanup()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 
-	glfwTerminate();
+	window.close();
 }
 
 void Engine::initWindow()
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	window = glfwCreateWindow(WIDTH, HEIGHT, "Engine", nullptr, nullptr);
-
-	if (window == nullptr) {
-		throw std::runtime_error("Failed to create GLFW window");
-	}
-
-	glfwMakeContextCurrent(window);
-}
-
-void Engine::initGlad()
-{
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		throw std::runtime_error("Failed to initialize GLAD.");
-	}
-}
-
-void Engine::setFramebufferSize(int width, int height)
-{
-	glViewport(0, 0, width, height);
-	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+	window.init(WIDTH, HEIGHT, "Engine");
+	window.setClearColor(0.2f, 0.3f, 0.5f, 1.0f);
 }
 
 void Engine::initShaderProgram()
@@ -103,8 +69,11 @@ void Engine::createVertexObjects()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	//unbind the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -114,9 +83,9 @@ void Engine::createVertexObjects()
 
 	//unbind the vao
 	glBindVertexArray(0);
-	
 }
 
+//TODO : Move input processing to a general input manager
 void Engine::processInput(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -126,15 +95,20 @@ void Engine::processInput(GLFWwindow *window)
 
 void Engine::renderFrame()
 {
-	glClearColor(0.4f, 0.3f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	program.useProgram();
+
+	float time = glfwGetTime();
+	float modifier = sin(time);
+	program.setUniformFloat("time", modifier);
+
 	glBindVertexArray(vao);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
 
+	window.swapBuffers();
+}
 
 void Engine::start()
 {
