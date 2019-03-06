@@ -4,20 +4,20 @@
 #include "ShaderProgram.h"
 
 
-void ShaderProgram::compileShaders(const char *vertpath, const char *fragpath)
+void ShaderProgram::compileShaders(const char *vertPath, const char *fragPath)
 {
-	uint32_t vertshaderid;
-	uint32_t fragshaderid;
+	uint32_t vertexShader;
+	uint32_t fragmentShader;
 
-	vertshaderid = glCreateShader(GL_VERTEX_SHADER);
-	fragshaderid = glCreateShader(GL_FRAGMENT_SHADER);
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	compileShader(vertpath, vertshaderid);
-	compileShader(fragpath, fragshaderid);
+	compileShader(vertPath, vertexShader);
+	compileShader(fragPath, fragmentShader);
 
 	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertshaderid);
-	glAttachShader(shaderProgram, fragshaderid);
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
 	
 	int success;
@@ -31,8 +31,11 @@ void ShaderProgram::compileShaders(const char *vertpath, const char *fragpath)
 		throw std::runtime_error(errorMessage);
 	}
 
-	glDeleteShader(vertshaderid);
-	glDeleteShader(fragshaderid);
+	glDetachShader(shaderProgram, vertexShader);
+	glDetachShader(shaderProgram, fragmentShader);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 }
 
 void ShaderProgram::useProgram()
@@ -50,7 +53,7 @@ void ShaderProgram::setUniformFloat(const char* name, float value)
 	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
 }
 
-void ShaderProgram::compileShader(const char *path, uint32_t id)
+void ShaderProgram::compileShader(const char *path, uint32_t shader)
 {
 	std::ifstream input(path);
 
@@ -69,15 +72,15 @@ void ShaderProgram::compileShader(const char *path, uint32_t id)
 	}
 
 	const char* tempContents = source.c_str();
-	glShaderSource(id, 1, &tempContents, nullptr);
-	glCompileShader(id);
+	glShaderSource(shader, 1, &tempContents, nullptr);
+	glCompileShader(shader);
 
 	int success;
 	char infoLog[512];
-	glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(id, 512, NULL, infoLog);
+		glGetShaderInfoLog(shader, 512, NULL, infoLog);
 		std::string errorMessage("Shader compilation failed " + *path);
 		errorMessage += '\n';
 		errorMessage += infoLog;

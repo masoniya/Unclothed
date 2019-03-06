@@ -9,7 +9,7 @@ class ShaderProgram
 {
 public:
 
-	void compileShaders(const char* vertpath, const char* fragpath);
+	void compileShaders(const char* vertPath, const char* fragPath);
 	void useProgram();
 	void setUniformInt(const char* name, int value);
 	void setUniformFloat(const char* name, float value);
@@ -18,6 +18,6 @@ private:
 
 	uint32_t shaderProgram;
 
-	void compileShader(const char* path, uint32_t id);
+	void compileShader(const char* path, uint32_t shader);
 
 };
