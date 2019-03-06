@@ -33,6 +33,7 @@ private:
 	uint32_t vbo;
 	uint32_t vao;
 	uint32_t ebo;
+	int attribCount;
 
 	ShaderProgram program;
 	Window window;
@@ -44,6 +45,7 @@ private:
 	void initWindow();
 	void initShaderProgram();
 	void createVertexObjects();
+	void enableAttributes();
 	
 	void processInput(GLFWwindow *window);
 	void renderFrame();

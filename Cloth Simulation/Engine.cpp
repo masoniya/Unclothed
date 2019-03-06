@@ -8,7 +8,8 @@ Engine::Engine() :	vertices{
 					},
 					indices{
 						0, 1, 2,
-					}
+					},
+					attribCount(0)
 {
 }
 
@@ -69,11 +70,10 @@ void Engine::createVertexObjects()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	enableAttributes();
 
 	//unbind the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -83,6 +83,13 @@ void Engine::createVertexObjects()
 
 	//unbind the vao
 	glBindVertexArray(0);
+}
+
+void Engine::enableAttributes()
+{
+	for (int i = 0; i < attribCount; i++) {
+		glEnableVertexAttribArray(i);
+	}
 }
 
 //TODO : Move input processing to a general input manager
