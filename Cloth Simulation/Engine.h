@@ -1,12 +1,11 @@
 #pragma once
-#include <cmath>
-#include <string>
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
 #include "ShaderProgram.h"
 #include "Window.h"
+#include "Texture.h"
 
 
 const int WIDTH = 800;
@@ -14,6 +13,8 @@ const int HEIGHT = 600;
 
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
+
+const char* const texturePath = "resources/wall.jpg";
 
 //This is also acceptable syntax for c strings as arrays are constant by nature
 //const char vertexShaderPath[] = "shaders/shader.vert";
@@ -28,8 +29,8 @@ public:
 	void start();
 
 private:
-	float vertices[18];
-	uint32_t indices[3];
+	float vertices[32];
+	uint32_t indices[6];
 	uint32_t vbo;
 	uint32_t vao;
 	uint32_t ebo;
@@ -37,6 +38,7 @@ private:
 
 	ShaderProgram program;
 	Window window;
+	Texture *texture;
 
 	void init();
 	void mainLoop();

@@ -259,8 +259,3 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-
-Cloth Simulation.sln
-Cloth Simulation.vcxproj
-Cloth Simulation.vcxproj.filters
-Cloth Simulation.vcxproj.user
