@@ -50,6 +50,7 @@ void Engine::cleanup()
 	glDeleteBuffers(1, &ebo);
 
 	delete wallTexture;
+	delete faceTexture;
 
 	window.close();
 }
