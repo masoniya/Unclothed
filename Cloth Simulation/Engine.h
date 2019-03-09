@@ -14,7 +14,8 @@ const int HEIGHT = 600;
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
-const char* const texturePath = "resources/wall.jpg";
+const char* const wallPath = "resources/wall.jpg";
+const char* const facePath = "resources/awesomeface.png";
 
 //This is also acceptable syntax for c strings as arrays are constant by nature
 //const char vertexShaderPath[] = "shaders/shader.vert";
@@ -38,7 +39,8 @@ private:
 
 	ShaderProgram program;
 	Window window;
-	Texture *texture;
+	Texture *wallTexture;
+	Texture *faceTexture;
 
 	void init();
 	void mainLoop();

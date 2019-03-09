@@ -1,7 +1,6 @@
 #include <cmath>
 #include <string>
 
-
 #include "Engine.h"
 
 
@@ -27,7 +26,8 @@ void Engine::init()
 	initWindow();
 	initShaderProgram();
 
-	texture = new Texture(texturePath);
+	wallTexture = new Texture(wallPath);
+	faceTexture = new Texture(facePath);
 
 	createVertexObjects();
 }
@@ -49,7 +49,7 @@ void Engine::cleanup()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 
-	delete texture;
+	delete wallTexture;
 
 	window.close();
 }
@@ -126,7 +126,14 @@ void Engine::renderFrame()
 	program.setUniformFloat("time", modifier);
 	*/
 
-	texture->useTexture();
+	program.setUniformInt("textureSampler", 0);
+	program.setUniformInt("textureSampler2", 1);
+
+	glActiveTexture(GL_TEXTURE0);
+	wallTexture->useTexture();
+
+	glActiveTexture(GL_TEXTURE1);
+	faceTexture->useTexture();
 
 	glBindVertexArray(vao);
 

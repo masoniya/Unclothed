@@ -1,7 +1,10 @@
-#include "Texture.h"
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+
+#include "Texture.h"
+
 
 int Texture::minFilter = GL_LINEAR_MIPMAP_LINEAR;
 int Texture::magFilter = GL_LINEAR;
@@ -39,19 +42,35 @@ void Texture::construct(std::string texturePath, int minFilter, int magFilter)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 
+	stbi_set_flip_vertically_on_load(true);
+
 	int width, height, numChannels;
 	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &numChannels, 0);
 
+	//use file extension to determine color format
+	std::string fileExtension = texturePath.substr(texturePath.find_last_of(".") + 1);
+	int format;
+
+	if (fileExtension == "jpg") {
+		format = GL_RGB;
+	}
+	else if (fileExtension == "png") {
+		format = GL_RGBA;
+	}
+	else {
+		//default behavior
+		throw std::runtime_error("Unknown file extension");
+	}
+
 	if (data != nullptr) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format , width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
 		throw std::runtime_error("Failed to load texture");
 	}
+
 	stbi_image_free(data);
-
-
 }
 
 Texture::~Texture()
