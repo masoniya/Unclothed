@@ -116,6 +116,13 @@ void Engine::processInput(GLFWwindow *window)
 
 void Engine::renderFrame()
 {
+	//transformation code (move somewhere else)
+	glm::mat4 transform = glm::mat4(1.0f);
+	transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+	transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+	transform = glm::scale(transform, glm::vec3(0.5f, 0.75f, 1.0f));
+
+
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	program.useProgram();
@@ -128,6 +135,7 @@ void Engine::renderFrame()
 
 	program.setUniformInt("textureSampler", 0);
 	program.setUniformInt("textureSampler2", 1);
+	program.setUniformMat4("transform", glm::value_ptr(transform));
 
 	glActiveTexture(GL_TEXTURE0);
 	wallTexture->useTexture();
@@ -136,6 +144,13 @@ void Engine::renderFrame()
 	faceTexture->useTexture();
 
 	glBindVertexArray(vao);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	//nother draw call
+	transform = glm::translate(transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+	transform = glm::rotate(transform, (float)glfwGetTime() + 15, glm::vec3(0.0f, 0.0f, 1.0f));
+	program.setUniformMat4("transform", glm::value_ptr(transform));
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
