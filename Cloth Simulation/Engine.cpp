@@ -5,16 +5,35 @@
 
 
 Engine::Engine() :	vertices{ 
-						//positions			 //color			//texture coords
-						-0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,	0.0f, 1.0f,				//top left
-						 0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,	1.0f, 1.0f,				//top right
-						 0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,	1.0f, 0.0f,				//bottom right
-						-0.5f, -0.5f, 0.0f,  0.5f, 0.5f, 0.0f,	0.0f, 0.0f,				//bottom left
+						//positions			  //color			//texture coords
+						-0.5f,  0.5f,  0.5f,	1.0f, 0.0f, 0.0f,	0.0f, 1.0f,				//top left
+						 0.5f,  0.5f,  0.5f,	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,				//top right
+						 0.5f, -0.5f,  0.5f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f,				//bottom right
+						-0.5f, -0.5f,  0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 0.0f,				//bottom left
+						-0.5f,  0.5f, -0.5f,	1.0f, 0.0f, 0.0f,	1.0f, 0.0f,				//top left back
+						 0.5f,  0.5f, -0.5f,	0.0f, 1.0f, 0.0f,	0.0f, 0.0f,				//top right back
+						 0.5f, -0.5f, -0.5f,	0.0f, 0.0f, 1.0f,	0.0f, 1.0f,				//bottom right back
+						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	1.0f, 1.0f,				//bottom left back
 
 					},
 					indices{
-						0, 1, 2,
+						0, 1, 2,	//front face
 						2, 3, 0,
+
+						1, 5, 6,	//right face
+						6, 2, 1,
+
+						3, 2, 6,	//bottom face
+						6, 7, 3,
+
+						4, 0, 3,	//left face
+						3, 7, 4,
+
+						4, 5, 1,	//top face
+						1, 0, 4,
+
+						4, 5, 6,	//back face
+						6, 7, 4,
 					},
 					attribCount(0)
 {
@@ -30,6 +49,8 @@ void Engine::init()
 	faceTexture = new Texture(facePath);
 
 	createVertexObjects();
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Engine::mainLoop()
@@ -117,26 +138,29 @@ void Engine::processInput(GLFWwindow *window)
 
 void Engine::renderFrame()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	//transformation code (move somewhere else)
-	glm::mat4 transform = glm::mat4(1.0f);
-	transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
-	transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-	transform = glm::scale(transform, glm::vec3(0.5f, 0.75f, 1.0f));
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / HEIGHT, 0.1f, 100.0f);
 
 	program.useProgram();
 
-	/*
-	float time = (float)glfwGetTime();
-	float modifier = sin(time);
-	program.setUniformFloat("time", modifier);
-	*/
-
 	program.setUniformInt("textureSampler", 0);
 	program.setUniformInt("textureSampler2", 1);
-	program.setUniformMat4("transform", glm::value_ptr(transform));
+	program.setUniformMat4("model", glm::value_ptr(model));
+	program.setUniformMat4("view", glm::value_ptr(view));
+	program.setUniformMat4("projection", glm::value_ptr(projection));
+
 
 	glActiveTexture(GL_TEXTURE0);
 	wallTexture->useTexture();
@@ -146,14 +170,14 @@ void Engine::renderFrame()
 
 	glBindVertexArray(vao);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	//nother draw call
-	transform = glm::translate(transform, glm::vec3(-1.0f, -1.0f, 0.0f));
-	transform = glm::rotate(transform, (float)glfwGetTime() + 15, glm::vec3(0.0f, 0.0f, 1.0f));
-	program.setUniformMat4("transform", glm::value_ptr(transform));
+	////nother draw call
+	//transform = glm::translate(transform, glm::vec3(-1.0f, -1.0f, 0.0f));
+	//transform = glm::rotate(transform, (float)glfwGetTime() + 15, glm::vec3(0.0f, 0.0f, 1.0f));
+	//program.setUniformMat4("transform", glm::value_ptr(transform));
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	window.swapBuffers();
 }

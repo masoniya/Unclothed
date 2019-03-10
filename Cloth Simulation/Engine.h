@@ -19,7 +19,7 @@ const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
 const char* const wallPath = "resources/wall.jpg";
-const char* const facePath = "resources/awesomeface.png";
+const char* const facePath = "resources/pepe.png";
 
 //This is also acceptable syntax for c strings as arrays are constant by nature
 //const char vertexShaderPath[] = "shaders/shader.vert";
@@ -34,8 +34,8 @@ public:
 	void start();
 
 private:
-	float vertices[32];
-	uint32_t indices[6];
+	float vertices[64];
+	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;
 	uint32_t ebo;
