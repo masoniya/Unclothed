@@ -1,5 +1,4 @@
 #include <cmath>
-#include <string>
 
 #include "Engine.h"
 
@@ -10,10 +9,10 @@ Engine::Engine() :	vertices{
 						 0.5f,  0.5f,  0.5f,	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,				//top right
 						 0.5f, -0.5f,  0.5f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f,				//bottom right
 						-0.5f, -0.5f,  0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 0.0f,				//bottom left
-						-0.5f,  0.5f, -0.5f,	1.0f, 0.0f, 0.0f,	1.0f, 0.0f,				//top left back
-						 0.5f,  0.5f, -0.5f,	0.0f, 1.0f, 0.0f,	0.0f, 0.0f,				//top right back
-						 0.5f, -0.5f, -0.5f,	0.0f, 0.0f, 1.0f,	0.0f, 1.0f,				//bottom right back
-						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	1.0f, 1.0f,				//bottom left back
+						-0.5f,  0.5f, -0.5f,	1.0f, 0.0f, 0.0f,	0.0f, 0.0f,				//top left back
+						 0.5f,  0.5f, -0.5f,	0.0f, 1.0f, 0.0f,	1.0f, 0.0f,				//top right back
+						 0.5f, -0.5f, -0.5f,	0.0f, 0.0f, 1.0f,	1.0f, 1.0f,				//bottom right back
+						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 1.0f,				//bottom left back
 
 					},
 					indices{
@@ -47,6 +46,13 @@ void Engine::init()
 
 	wallTexture = new Texture(wallPath);
 	faceTexture = new Texture(facePath);
+
+	tsTextures[0] = new Texture(ts1);
+	tsTextures[1] = new Texture(ts2);
+	tsTextures[2] = new Texture(ts3);
+	tsTextures[3] = new Texture(ts4);
+	tsTextures[4] = new Texture(ts5);
+
 
 	createVertexObjects();
 
@@ -144,8 +150,8 @@ void Engine::renderFrame()
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.2f, 3.0f, 0.5f)));
+	model = glm::scale(model, glm::vec3(0.6f, 0.5f, 0.5f));
 
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -172,12 +178,18 @@ void Engine::renderFrame()
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	////nother draw call
-	//transform = glm::translate(transform, glm::vec3(-1.0f, -1.0f, 0.0f));
-	//transform = glm::rotate(transform, (float)glfwGetTime() + 15, glm::vec3(0.0f, 0.0f, 1.0f));
-	//program.setUniformMat4("transform", glm::value_ptr(transform));
+	//draw more cubes
+	for (int i = 0; i < 15; i++) {
+		glm::mat4 models = glm::mat4(1.0f);
+		models = glm::translate(model, glm::vec3(0.4f + sin(i) * 2, 0.6f + cos(i) * 3, -sin(i) + cos(2 * i) * 2));
+		models = glm::rotate(models, (float)glm::radians((float)glfwGetTime() * 25) * glm::radians(30.0f), glm::normalize(glm::vec3(4.0f, 5.0f, 15.0f)));
+		program.setUniformMat4("model", glm::value_ptr(models));
 
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glActiveTexture(GL_TEXTURE1);
+		tsTextures[i % 5]->useTexture();
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	}
 
 	window.swapBuffers();
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 
@@ -18,13 +20,18 @@ const int HEIGHT = 600;
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
-const char* const wallPath = "resources/wall.jpg";
-const char* const facePath = "resources/pepe.png";
-
 //This is also acceptable syntax for c strings as arrays are constant by nature
 //const char vertexShaderPath[] = "shaders/shader.vert";
 //const char fragmentShaderPath[] = "shaders/shader.frag";
 
+const std::string wallPath = "resources/wall.jpg";
+const std::string facePath = "resources/pepe.png";
+
+const std::string ts1 = "resources/ts1.jpg";
+const std::string ts2 = "resources/ts2.jpg";
+const std::string ts3 = "resources/ts3.jpg";
+const std::string ts4 = "resources/ts4.jpg";
+const std::string ts5 = "resources/ts5.jpg";
 
 class Engine
 {
@@ -45,6 +52,7 @@ private:
 	Window window;
 	Texture *wallTexture;
 	Texture *faceTexture;
+	Texture *tsTextures[5];
 
 	void init();
 	void mainLoop();
