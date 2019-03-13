@@ -2,9 +2,12 @@
 
 #include "Engine.h"
 
+float deltaTime = 0.0f;
+float prevTime = 0.0f;
 
 Engine::Engine() :	vertices{ 
-						//positions			  //color			//texture coords
+						//Cube vertices
+						//positions				//color				//texture coords
 						-0.5f,  0.5f,  0.5f,	1.0f, 0.0f, 0.0f,	0.0f, 1.0f,				//top left
 						 0.5f,  0.5f,  0.5f,	0.0f, 1.0f, 0.0f,	1.0f, 1.0f,				//top right
 						 0.5f, -0.5f,  0.5f,	0.0f, 0.0f, 1.0f,	1.0f, 0.0f,				//bottom right
@@ -41,17 +44,20 @@ Engine::Engine() :	vertices{
 
 void Engine::init()
 {
+	window = new Window;
+
 	initWindow();
 	initShaderProgram();
+
+	inputManager = new InputManager(window->getWindow());
+	inputManager->registerKeyboardInput(window);
 
 	wallTexture = new Texture(wallPath);
 	faceTexture = new Texture(facePath);
 
-	tsTextures[0] = new Texture(ts1);
-	tsTextures[1] = new Texture(ts2);
-	tsTextures[2] = new Texture(ts3);
-	tsTextures[3] = new Texture(ts4);
-	tsTextures[4] = new Texture(ts5);
+	mainCamera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	inputManager->registerKeyboardInput(mainCamera);
+	inputManager->registerMouseInput(mainCamera);
 
 
 	createVertexObjects();
@@ -61,8 +67,12 @@ void Engine::init()
 
 void Engine::mainLoop()
 {
-	while (!glfwWindowShouldClose(window.getWindow())) {
-		processInput(window.getWindow());
+	while (!glfwWindowShouldClose(window->getWindow())) {
+		float currentTime = (float)glfwGetTime();
+		deltaTime = currentTime - prevTime;
+		prevTime = currentTime;
+
+		inputManager->handleKeyboardInput();
 
 		renderFrame();
 
@@ -79,13 +89,13 @@ void Engine::cleanup()
 	delete wallTexture;
 	delete faceTexture;
 
-	window.close();
+	window->close();
 }
 
 void Engine::initWindow()
 {
-	window.init(WIDTH, HEIGHT, "Engine");
-	window.setClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+	window->init(WIDTH, HEIGHT, "Engine");
+	window->setClearColor(0.2f, 0.3f, 0.5f, 1.0f);
 }
 
 void Engine::initShaderProgram()
@@ -134,14 +144,6 @@ void Engine::enableAttributes()
 	}
 }
 
-//TODO : Move input processing to a general input manager
-void Engine::processInput(GLFWwindow *window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-}
-
 void Engine::renderFrame()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -150,11 +152,15 @@ void Engine::renderFrame()
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.2f, 3.0f, 0.5f)));
-	model = glm::scale(model, glm::vec3(0.6f, 0.5f, 0.5f));
+	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
+	/*
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	*/
+
+	glm::mat4 view = mainCamera->view();
 
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / HEIGHT, 0.1f, 100.0f);
@@ -178,20 +184,7 @@ void Engine::renderFrame()
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-	//draw more cubes
-	for (int i = 0; i < 15; i++) {
-		glm::mat4 models = glm::mat4(1.0f);
-		models = glm::translate(model, glm::vec3(0.4f + sin(i) * 2, 0.6f + cos(i) * 3, -sin(i) + cos(2 * i) * 2));
-		models = glm::rotate(models, (float)glm::radians((float)glfwGetTime() * 25) * glm::radians(30.0f), glm::normalize(glm::vec3(4.0f, 5.0f, 15.0f)));
-		program.setUniformMat4("model", glm::value_ptr(models));
-
-		glActiveTexture(GL_TEXTURE1);
-		tsTextures[i % 5]->useTexture();
-
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	}
-
-	window.swapBuffers();
+	window->swapBuffers();
 }
 
 void Engine::start()

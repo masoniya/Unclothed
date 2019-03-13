@@ -12,6 +12,8 @@
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Texture.h"
+#include "Camera.h"
+#include "InputManager.h"
 
 
 const int WIDTH = 800;
@@ -27,11 +29,6 @@ const char* const fragmentShaderPath = "shaders/shader.frag";
 const std::string wallPath = "resources/wall.jpg";
 const std::string facePath = "resources/pepe.png";
 
-const std::string ts1 = "resources/ts1.jpg";
-const std::string ts2 = "resources/ts2.jpg";
-const std::string ts3 = "resources/ts3.jpg";
-const std::string ts4 = "resources/ts4.jpg";
-const std::string ts5 = "resources/ts5.jpg";
 
 class Engine
 {
@@ -49,10 +46,11 @@ private:
 	int attribCount;
 
 	ShaderProgram program;
-	Window window;
+	Window *window;
 	Texture *wallTexture;
 	Texture *faceTexture;
-	Texture *tsTextures[5];
+	Camera *mainCamera;
+	InputManager *inputManager;
 
 	void init();
 	void mainLoop();
@@ -63,7 +61,6 @@ private:
 	void createVertexObjects();
 	void enableAttributes();
 	
-	void processInput(GLFWwindow *window);
 	void renderFrame();
 
 };
