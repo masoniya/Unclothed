@@ -236,9 +236,12 @@ void Engine::renderFrame()
 	program.setUniformVec3("objectColor", &objectColor[0]);
 	program.setUniformVec3("lightColor", &(lightSource->getLightColor())[0]);
 	program.setUniformVec3("lightPosition", &(lightSource->getPosition())[0]);
+	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
 
 	program.setUniformFloat("ambientStrength", ambientStrength);
+	program.setUniformFloat("specularStrength", specularStrength);
 
+	program.setUniformInt("shininess", objectShininess);
 
 	glActiveTexture(GL_TEXTURE0);
 	wallTexture->useTexture();

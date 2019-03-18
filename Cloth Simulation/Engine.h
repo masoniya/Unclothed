@@ -31,6 +31,8 @@ const std::string facePath = "resources/pepe.png";
 
 const glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
 
+const int objectShininess = 64;
+
 class Engine
 {
 public:

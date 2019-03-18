@@ -16,6 +16,8 @@ public:
 	void manageKeyboardInput(GLFWwindow *window);
 	void manageMouseInput(double xOffset, double yOffset);
 
+	glm::vec3 getCameraPosition() { return cameraPosition; }
+
 private:
 
 	float cameraSpeed;
