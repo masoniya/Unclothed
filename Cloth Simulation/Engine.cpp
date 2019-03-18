@@ -5,7 +5,7 @@
 float deltaTime = 0.0f;
 float prevTime = 0.0f;
 
-Engine::Engine() :	vertices{ 
+Engine::Engine() :	/*vertices{ 
 						//Cube vertices
 						//positions				//color				//texture coords
 						-0.5f,  0.5f,  0.5f,	1.0f, 0.0f, 0.0f,	0.0f, 1.0f,				//top left
@@ -17,6 +17,16 @@ Engine::Engine() :	vertices{
 						 0.5f, -0.5f, -0.5f,	0.0f, 0.0f, 1.0f,	1.0f, 1.0f,				//bottom right back
 						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 1.0f,				//bottom left back
 
+					},*/
+					vertices{
+						-0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
+						 0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
+						 0.5f, -0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
+						-0.5f, -0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
+						-0.5f,  0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
+						 0.5f,  0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
+						 0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
+						-0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
 					},
 					indices{
 						0, 1, 2,	//front face
@@ -55,12 +65,15 @@ void Engine::init()
 	wallTexture = new Texture(wallPath);
 	faceTexture = new Texture(facePath);
 
-	mainCamera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	inputManager->registerKeyboardInput(mainCamera);
-	inputManager->registerMouseInput(mainCamera);
+	camera = new Camera(glm::vec3(0.0f, 0.0f, 6.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	inputManager->registerKeyboardInput(camera);
+	inputManager->registerMouseInput(camera);
 
 
 	createVertexObjects();
+
+	lightSource = new LightSource();
+	lightSource->init();
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -101,6 +114,7 @@ void Engine::initWindow()
 void Engine::initShaderProgram()
 {
 	program.compileShaders(vertexShaderPath, fragmentShaderPath);
+	lightProgram.compileShaders(lampVertShaderPath, lampFragShaderPath);
 }
 
 void Engine::createVertexObjects()
@@ -121,9 +135,11 @@ void Engine::createVertexObjects()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
-	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	enableAttributes();
 
@@ -160,15 +176,17 @@ void Engine::renderFrame()
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	*/
 
-	glm::mat4 view = mainCamera->view();
+	glm::mat4 view = camera->view();
 
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / HEIGHT, 0.1f, 100.0f);
 
 	program.useProgram();
 
-	program.setUniformInt("textureSampler", 0);
-	program.setUniformInt("textureSampler2", 1);
+	//program.setUniformInt("textureSampler", 0);
+	//program.setUniformInt("textureSampler2", 1);
+	program.setUniformVec3("objectColor", &objectColor[0]);
+	program.setUniformVec3("lightColor", &(lightSource->getLightColor())[0]);
 	program.setUniformMat4("model", glm::value_ptr(model));
 	program.setUniformMat4("view", glm::value_ptr(view));
 	program.setUniformMat4("projection", glm::value_ptr(projection));
@@ -181,7 +199,19 @@ void Engine::renderFrame()
 	faceTexture->useTexture();
 
 	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+	lightProgram.useProgram();
+
+	glm::mat4 lampModel = glm::mat4(1.0f);
+	lampModel = glm::translate(lampModel, lightSource->getPosition());
+	lampModel = glm::scale(lampModel, glm::vec3(0.2f));
+
+	lightProgram.setUniformMat4("model", &lampModel[0][0]);
+	lightProgram.setUniformMat4("view", &view[0][0]);
+	lightProgram.setUniformMat4("projection", &projection[0][0]);
+
+	lightSource->use();
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	window->swapBuffers();

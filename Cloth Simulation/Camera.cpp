@@ -5,7 +5,7 @@
 
 extern float deltaTime;
 
-const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
+static const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 Camera::Camera()
 {
@@ -26,9 +26,11 @@ void Camera::construct(glm::vec3 position, glm::vec3 front, glm::vec3 up)
 	cameraFront = front;
 	cameraUp = up;
 
-	//idk why these are like this need check
+	//now I know why these be like this
 	pitch = 0.0f;
 	yaw = -90.0f;
+
+	recalculateCameraVectors();
 
 	updateView();
 }
@@ -67,17 +69,7 @@ void Camera::manageMouseInput(double xOffset, double yOffset)
 		pitch = -89.9f;
 	}
 
-	glm::vec3 front;
-	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
-	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	
-	//recalculate camera vectors
-	cameraFront = glm::normalize(front);
-	
-	glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, WORLD_UP));
-
-	cameraUp = glm::normalize(glm::cross(cameraFront, cameraRight));
+	recalculateCameraVectors();
 
 	updateView();
 }
@@ -85,4 +77,19 @@ void Camera::manageMouseInput(double xOffset, double yOffset)
 void Camera::updateView()
 {
 	viewMatrix = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+}
+
+void Camera::recalculateCameraVectors()
+{
+	glm::vec3 front;
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+	//recalculate camera vectors
+	cameraFront = glm::normalize(front);
+
+	glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, WORLD_UP));
+
+	cameraUp = glm::normalize(glm::cross(cameraFront, cameraRight));
 }

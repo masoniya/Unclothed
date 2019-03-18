@@ -134,6 +134,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PointMass.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="Gravity.h" />
+    <ClInclude Include="LightSource.h" />
     <ClInclude Include="MouseControl.h" />
     <ClInclude Include="KeyboardControl.h" />
     <ClInclude Include="InputManager.h" />

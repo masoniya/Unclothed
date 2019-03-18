@@ -22,6 +22,7 @@ private:
 
 	void construct(glm::vec3, glm::vec3, glm::vec3);
 	void updateView();
+	void recalculateCameraVectors();
 
 	glm::vec3 cameraPosition;
 	glm::vec3 cameraFront;

@@ -14,6 +14,7 @@
 #include "Texture.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "LightSource.h"
 
 
 const int WIDTH = 800;
@@ -22,13 +23,13 @@ const int HEIGHT = 600;
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
-//This is also acceptable syntax for c strings as arrays are constant by nature
-//const char vertexShaderPath[] = "shaders/shader.vert";
-//const char fragmentShaderPath[] = "shaders/shader.frag";
+const char lampVertShaderPath[] = "shaders/LampShader.vert";
+const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
 const std::string wallPath = "resources/wall.jpg";
 const std::string facePath = "resources/pepe.png";
 
+const glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
 
 class Engine
 {
@@ -38,7 +39,7 @@ public:
 	void start();
 
 private:
-	float vertices[64];
+	float vertices[48];
 	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;
@@ -49,8 +50,10 @@ private:
 	Window *window;
 	Texture *wallTexture;
 	Texture *faceTexture;
-	Camera *mainCamera;
+	Camera *camera;
 	InputManager *inputManager;
+	LightSource *lightSource;
+	ShaderProgram lightProgram;
 
 	void init();
 	void mainLoop();
