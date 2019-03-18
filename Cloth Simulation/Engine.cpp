@@ -18,7 +18,7 @@ Engine::Engine() :	/*vertices{
 						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 1.0f,				//bottom left back
 
 					},*/
-					vertices{
+					/*vertices{
 						-0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
 						 0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
 						 0.5f, -0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
@@ -27,6 +27,49 @@ Engine::Engine() :	/*vertices{
 						 0.5f,  0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
 						 0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
 						-0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
+					},*/
+					vertices{
+					-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+					 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+					 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+					 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+					-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+					-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+					-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+					 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+					 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+					 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+					-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+					-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+					-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+					-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+					-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+					-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+					-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+					-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+					 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+					 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+					 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+					 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+					 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+					 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+					-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+					 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+					 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+					 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+					-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+					-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+					-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+					 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+					 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+					 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+					-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+					-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 					},
 					indices{
 						0, 1, 2,	//front face
@@ -138,6 +181,7 @@ void Engine::createVertexObjects()
 	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
@@ -185,11 +229,15 @@ void Engine::renderFrame()
 
 	//program.setUniformInt("textureSampler", 0);
 	//program.setUniformInt("textureSampler2", 1);
-	program.setUniformVec3("objectColor", &objectColor[0]);
-	program.setUniformVec3("lightColor", &(lightSource->getLightColor())[0]);
 	program.setUniformMat4("model", glm::value_ptr(model));
 	program.setUniformMat4("view", glm::value_ptr(view));
 	program.setUniformMat4("projection", glm::value_ptr(projection));
+
+	program.setUniformVec3("objectColor", &objectColor[0]);
+	program.setUniformVec3("lightColor", &(lightSource->getLightColor())[0]);
+	program.setUniformVec3("lightPosition", &(lightSource->getPosition())[0]);
+
+	program.setUniformFloat("ambientStrength", ambientStrength);
 
 
 	glActiveTexture(GL_TEXTURE0);
@@ -199,7 +247,8 @@ void Engine::renderFrame()
 	faceTexture->useTexture();
 
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 216);
 
 	lightProgram.useProgram();
 

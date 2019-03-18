@@ -39,7 +39,7 @@ public:
 	void start();
 
 private:
-	float vertices[48];
+	float vertices[216];
 	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;

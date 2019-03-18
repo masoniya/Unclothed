@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+const float ambientStrength = 0.1f;
+
 class LightSource
 {
 public:
