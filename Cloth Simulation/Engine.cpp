@@ -111,7 +111,7 @@ void Engine::init()
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 6.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	inputManager->registerKeyboardInput(camera);
 	inputManager->registerMouseInput(camera);
-
+	inputManager->registerScrollInput(camera);
 
 	createVertexObjects();
 
@@ -227,8 +227,7 @@ void Engine::renderFrame()
 
 	glm::mat4 view = camera->view();
 
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), (float) WIDTH / HEIGHT, 0.1f, 100.0f);
+	glm::mat4 projection = camera->project();
 
 	program.useProgram();
 

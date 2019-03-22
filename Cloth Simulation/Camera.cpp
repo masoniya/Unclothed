@@ -3,6 +3,12 @@
 
 #include "Camera.h"
 
+const int WIDTH = 800;
+const int HEIGHT = 600;
+
+const float minFov = 1.0f;
+const float maxFov = 45.0f;
+
 extern float deltaTime;
 
 static const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -29,7 +35,10 @@ void Camera::construct(glm::vec3 position, glm::vec3 front, glm::vec3 up)
 	pitch = 0.0f;
 	yaw = -90.0f;
 
+	fov = 45.0f;
+
 	updateView();
+	updateProjection();
 }
 
 glm::mat4 Camera::view()
@@ -37,6 +46,12 @@ glm::mat4 Camera::view()
 	return viewMatrix;
 }
 
+glm::mat4 Camera::project()
+{
+	return projectionMatrix;
+}
+
+//change position
 void Camera::manageKeyboardInput(GLFWwindow *window)
 {
 	cameraSpeed = 2.5f * deltaTime;
@@ -53,6 +68,7 @@ void Camera::manageKeyboardInput(GLFWwindow *window)
 	updateView();
 }
 
+//change direction
 void Camera::manageMouseInput(double xOffset, double yOffset)
 {
 	yaw += (float)xOffset;
@@ -71,9 +87,30 @@ void Camera::manageMouseInput(double xOffset, double yOffset)
 	updateView();
 }
 
+//zoom in and out
+void Camera::manageScrollInput(double xOffset, double yOffset)
+{
+	if (fov >= minFov && fov <= maxFov) {
+		fov -= yOffset;
+	}
+	if (fov <= minFov) {
+		fov = minFov;
+	}
+	if (fov >= maxFov) {
+		fov = maxFov;
+	}
+
+	updateProjection();
+}
+
 void Camera::updateView()
 {
 	viewMatrix = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+}
+
+void Camera::updateProjection()
+{
+	projectionMatrix = glm::perspective(glm::radians(fov), (float)WIDTH / HEIGHT, 0.1f, 100.0f);
 }
 
 void Camera::recalculateCameraVectors()

@@ -5,6 +5,7 @@
 
 #include "KeyboardControl.h"
 #include "MouseControl.h"
+#include "ScrollControl.h"
 
 class InputManager
 {
@@ -12,20 +13,20 @@ public:
 	InputManager(GLFWwindow *window);
 
 	void registerKeyboardInput(KeyboardControl * inputObject);
+	static void registerMouseInput(MouseControl * inputObject);
+	static void registerScrollInput(ScrollControl * inputObject);
+
 
 	void handleKeyboardInput();
-
-	//In retrospect maybe the entire input manager should have been static but w/e
-	static void registerMouseInput(MouseControl * inputObject);
-
 	static void handleMouseInput(double xPosition, double yPosition);
+	static void handleScrollInput(double xOffset, double yOffset);
 
 private:
 	GLFWwindow *window;
 
 	std::vector<KeyboardControl *> keyboardInputObjects;
-
 	static MouseControl * activeMouseInputObject;
+	static ScrollControl * activeScrollInputObject;
 
 	static double mouseLastXPos;
 	static double mouseLastYPos;

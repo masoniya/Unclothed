@@ -152,6 +152,7 @@
     <ClInclude Include="KeyboardControl.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PointMass.h" />
+    <ClInclude Include="ScrollControl.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vertex.h" />
