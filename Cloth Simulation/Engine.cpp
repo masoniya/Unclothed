@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 
+
 float deltaTime = 0.0f;
 float prevTime = 0.0f;
 
@@ -18,58 +19,48 @@ Engine::Engine() :	/*vertices{
 						-0.5f, -0.5f, -0.5f,	0.5f, 0.5f, 0.0f,	0.0f, 1.0f,				//bottom left back
 
 					},*/
-					/*vertices{
-						-0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
-						 0.5f,  0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
-						 0.5f, -0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
-						-0.5f, -0.5f,  0.5f,	1.0f, 1.0f, 1.0f,
-						-0.5f,  0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
-						 0.5f,  0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
-						 0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
-						-0.5f, -0.5f, -0.5f,	1.0f, 1.0f, 1.0f,
-					},*/
 					vertices{
-					-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-					 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-					 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-					 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-					-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-					-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+						-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+						 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+						 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+						 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+						-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+						-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-					-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-					 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-					 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-					 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-					-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-					-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+						-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+						 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+						 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+						 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+						-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+						-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
 
-					-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-					-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-					-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-					-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-					-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-					-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+						-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+						-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+						-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+						-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+						-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+						-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-					 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-					 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-					 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-					 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-					 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-					 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+						 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+						 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+						 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+						 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+						 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+						 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 
-					-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-					 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-					 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-					 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-					-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-					-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+						-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+						 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+						 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+						 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+						-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+						-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
 
-					-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-					 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-					 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-					 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-					-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-					-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+						-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+						 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+						 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+						 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+						-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+						-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 					},
 					indices{
 						0, 1, 2,	//front face
@@ -105,9 +96,6 @@ void Engine::init()
 	inputManager = new InputManager(window->getWindow());
 	inputManager->registerKeyboardInput(window);
 
-	wallTexture = new Texture(wallPath);
-	faceTexture = new Texture(facePath);
-
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 6.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	inputManager->registerKeyboardInput(camera);
 	inputManager->registerMouseInput(camera);
@@ -118,10 +106,7 @@ void Engine::init()
 	lightSource = new LightSource();
 	lightSource->init();
 
-	material.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
-	material.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
-	material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
-	material.shininess = 32;
+	material = new Material(diffPath, specPath, 32.0f);
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -147,8 +132,7 @@ void Engine::cleanup()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 
-	delete wallTexture;
-	delete faceTexture;
+	delete material;
 
 	window->close();
 }
@@ -183,12 +167,12 @@ void Engine::createVertexObjects()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	enableAttributes();
 
@@ -220,11 +204,6 @@ void Engine::renderFrame()
 	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
 	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
-	/*
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	*/
-
 	glm::mat4 view = camera->view();
 
 	glm::mat4 projection = camera->project();
@@ -235,33 +214,26 @@ void Engine::renderFrame()
 	program.setUniformMat4("view", glm::value_ptr(view));
 	program.setUniformMat4("projection", glm::value_ptr(projection));
 
-	//program.setUniformInt("textureSampler", 0);
-	//program.setUniformInt("textureSampler2", 1);
-
-	program.setUniformVec3("material.ambient", &material.ambient[0]);
-	program.setUniformVec3("material.diffuse", &material.diffuse[0]);
-	program.setUniformVec3("material.specular", &material.specular[0]);
-	program.setUniformFloat("material.shininess", material.shininess);
+	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
 
 	program.setUniformVec3("light.ambient", &(lightSource->getAmbientColor())[0]);
 	program.setUniformVec3("light.diffuse", &(lightSource->getDiffuseColor())[0]);
 	program.setUniformVec3("light.specular", &(lightSource->getSpecularColor())[0]);
 	program.setUniformVec3("light.position", &(lightSource->getPosition())[0]);
 
-	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
-
-	//program.setUniformFloat("ambientStrength", ambientStrength);
-	//program.setUniformFloat("specularStrength", specularStrength);
+	program.setUniformInt("material.diffuse", 0);
+	program.setUniformInt("material.specular", 1);
+	program.setUniformFloat("material.shininess", material->shininess);
 
 	glActiveTexture(GL_TEXTURE0);
-	wallTexture->useTexture();
+	material->diffuseMap->useTexture();
 
 	glActiveTexture(GL_TEXTURE1);
-	faceTexture->useTexture();
+	material->specularMap->useTexture();
 
 	glBindVertexArray(vao);
 	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 216);
+	glDrawArrays(GL_TRIANGLES, 0, 288);
 
 	lightProgram.useProgram();
 
