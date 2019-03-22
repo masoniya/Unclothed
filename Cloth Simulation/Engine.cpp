@@ -118,6 +118,11 @@ void Engine::init()
 	lightSource = new LightSource();
 	lightSource->init();
 
+	material.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
+	material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+	material.shininess = 32;
+
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -227,21 +232,27 @@ void Engine::renderFrame()
 
 	program.useProgram();
 
-	//program.setUniformInt("textureSampler", 0);
-	//program.setUniformInt("textureSampler2", 1);
 	program.setUniformMat4("model", glm::value_ptr(model));
 	program.setUniformMat4("view", glm::value_ptr(view));
 	program.setUniformMat4("projection", glm::value_ptr(projection));
 
-	program.setUniformVec3("objectColor", &objectColor[0]);
-	program.setUniformVec3("lightColor", &(lightSource->getLightColor())[0]);
-	program.setUniformVec3("lightPosition", &(lightSource->getPosition())[0]);
+	//program.setUniformInt("textureSampler", 0);
+	//program.setUniformInt("textureSampler2", 1);
+
+	program.setUniformVec3("material.ambient", &material.ambient[0]);
+	program.setUniformVec3("material.diffuse", &material.diffuse[0]);
+	program.setUniformVec3("material.specular", &material.specular[0]);
+	program.setUniformFloat("material.shininess", material.shininess);
+
+	program.setUniformVec3("light.ambient", &(lightSource->getAmbientColor())[0]);
+	program.setUniformVec3("light.diffuse", &(lightSource->getDiffuseColor())[0]);
+	program.setUniformVec3("light.specular", &(lightSource->getSpecularColor())[0]);
+	program.setUniformVec3("light.position", &(lightSource->getPosition())[0]);
+
 	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
 
-	program.setUniformFloat("ambientStrength", ambientStrength);
-	program.setUniformFloat("specularStrength", specularStrength);
-
-	program.setUniformInt("shininess", objectShininess);
+	//program.setUniformFloat("ambientStrength", ambientStrength);
+	//program.setUniformFloat("specularStrength", specularStrength);
 
 	glActiveTexture(GL_TEXTURE0);
 	wallTexture->useTexture();

@@ -26,11 +26,8 @@ void Camera::construct(glm::vec3 position, glm::vec3 front, glm::vec3 up)
 	cameraFront = front;
 	cameraUp = up;
 
-	//now I know why these be like this
 	pitch = 0.0f;
 	yaw = -90.0f;
-
-	recalculateCameraVectors();
 
 	updateView();
 }
@@ -91,5 +88,6 @@ void Camera::recalculateCameraVectors()
 
 	glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, WORLD_UP));
 
-	cameraUp = glm::normalize(glm::cross(cameraFront, cameraRight));
+	//cameraUp = glm::normalize(glm::cross(cameraFront, cameraRight));
+	cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }

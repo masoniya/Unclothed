@@ -5,9 +5,6 @@
 #include <glm/glm.hpp>
 
 
-const float ambientStrength = 0.1f;
-const float specularStrength = 0.5f;
-
 class LightSource
 {
 public:
@@ -18,7 +15,9 @@ public:
 	void unuse();
 
 	glm::vec3 getPosition() { return position; }
-	glm::vec3 getLightColor() { return lightColor; }
+	glm::vec3 getAmbientColor() { return ambientColor; }
+	glm::vec3 getDiffuseColor() { return diffuseColor; }
+	glm::vec3 getSpecularColor() { return specularColor; }
 
 private:
 
@@ -29,5 +28,8 @@ private:
 	uint32_t ebo;
 
 	glm::vec3 position;
-	glm::vec3 lightColor;
+
+	glm::vec3 ambientColor;
+	glm::vec3 diffuseColor;
+	glm::vec3 specularColor;
 };

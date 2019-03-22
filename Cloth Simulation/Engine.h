@@ -29,9 +29,13 @@ const char lampFragShaderPath[] = "shaders/LampShader.frag";
 const std::string wallPath = "resources/wall.jpg";
 const std::string facePath = "resources/pepe.png";
 
-const glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
 
-const int objectShininess = 64;
+struct Material {
+	glm::vec3 ambient;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+	float shininess;
+};
 
 class Engine
 {
@@ -56,6 +60,7 @@ private:
 	InputManager *inputManager;
 	LightSource *lightSource;
 	ShaderProgram lightProgram;
+	Material material;
 
 	void init();
 	void mainLoop();

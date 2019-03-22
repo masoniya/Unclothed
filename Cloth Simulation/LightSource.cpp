@@ -32,9 +32,15 @@ LightSource::LightSource() :
 						6, 7, 4,
 					},
 					position{
-						1.2f, 1.0f, 2.0f,
+						1.2f, 1.0f, 2.0f
 					},
-					lightColor{
+					ambientColor{
+						0.2f, 0.2f, 0.2f
+					},
+					diffuseColor{
+						0.5f, 0.5f, 0.5f
+					},
+					specularColor{
 						1.0f, 1.0f, 1.0f
 					}
 {
