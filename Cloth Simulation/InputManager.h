@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 #include <glfw/glfw3.h>

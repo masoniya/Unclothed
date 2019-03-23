@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 static void mouse_callback(GLFWwindow* window, double xPosition, double yPosition);
 static void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
 
