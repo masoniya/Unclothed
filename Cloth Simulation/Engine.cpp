@@ -225,6 +225,12 @@ void Engine::renderFrame()
 	program.setUniformFloat("light.linear", lightSource->getAttenuation().y);
 	program.setUniformFloat("light.quadratic", lightSource->getAttenuation().z);
 
+	//spot light
+	program.setUniformVec3("light.position", &camera->getCameraPosition()[0]);
+	program.setUniformVec3("light.direction", &camera->getCameraFront()[0]);
+	program.setUniformFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+	program.setUniformFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+
 	program.setUniformInt("material.diffuse", 0);
 	program.setUniformInt("material.specular", 1);
 	program.setUniformFloat("material.shininess", material->shininess);

@@ -20,6 +20,7 @@ public:
 	void manageScrollInput(double xOffset, double yOffset);
 
 	glm::vec3 getCameraPosition() { return cameraPosition; }
+	glm::vec3 getCameraFront() { return cameraFront; }
 
 private:
 	void construct(glm::vec3, glm::vec3, glm::vec3);
