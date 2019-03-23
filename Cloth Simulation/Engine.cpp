@@ -200,7 +200,6 @@ void Engine::renderFrame()
 	//transformation code (move somewhere else)
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
 	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
