@@ -2,47 +2,53 @@
 
 
 LightSource::LightSource() :
-					vertices{
-						-0.5f,  0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
-						 0.5f,  0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
-						 0.5f, -0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
-						-0.5f, -0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
-						-0.5f,  0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
-						 0.5f,  0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
-						 0.5f, -0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
-						-0.5f, -0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
-					},
-					indices{
-						0, 1, 2,	//front face
-						2, 3, 0,
+	vertices{
+		-0.5f,  0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  1.0f,	1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  2.0f,	1.0f, 1.0f, 1.0f,
+	},
+	indices{
+		0, 1, 2,	//front face
+		2, 3, 0,
 
-						1, 5, 6,	//right face
-						6, 2, 1,
+		1, 5, 6,	//right face
+		6, 2, 1,
 
-						3, 2, 6,	//bottom face
-						6, 7, 3,
+		3, 2, 6,	//bottom face
+		6, 7, 3,
 
-						4, 0, 3,	//left face
-						3, 7, 4,
+		4, 0, 3,	//left face
+		3, 7, 4,
 
-						4, 5, 1,	//top face
-						1, 0, 4,
+		4, 5, 1,	//top face
+		1, 0, 4,
 
-						4, 5, 6,	//back face
-						6, 7, 4,
-					},
-					position{
-						1.2f, 1.0f, 2.0f
-					},
-					ambientColor{
-						0.2f, 0.2f, 0.2f
-					},
-					diffuseColor{
-						0.5f, 0.5f, 0.5f
-					},
-					specularColor{
-						1.0f, 1.0f, 1.0f
-					}
+		4, 5, 6,	//back face
+		6, 7, 4,
+	},
+	position{
+		1.2f, 1.0f, 2.0f
+	},
+	direction{
+		-0.2f, -1.0f, -0.3f
+	},
+	ambientColor{
+		0.2f, 0.2f, 0.2f
+	},
+	diffuseColor{
+		0.8f, 0.8f, 0.8f
+	},
+	specularColor{
+		1.0f, 1.0f, 1.0f
+	},
+	attenuation{
+		1.0f, 0.07f, 0.017f
+	}
 {
 }
 

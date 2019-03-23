@@ -140,7 +140,7 @@ void Engine::cleanup()
 void Engine::initWindow()
 {
 	window->init(WIDTH, HEIGHT, "Engine");
-	window->setClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+	window->setClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
 void Engine::initShaderProgram()
@@ -198,10 +198,10 @@ void Engine::renderFrame()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//transformation code (move somewhere else)
-	glm::mat4 model = glm::mat4(1.0f);
+	/*glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(30.0f), glm::normalize(glm::vec3(1.0f, 1.0f, 1.0f)));
-	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));*/
 
 	glm::mat4 view = camera->view();
 
@@ -209,7 +209,7 @@ void Engine::renderFrame()
 
 	program.useProgram();
 
-	program.setUniformMat4("model", glm::value_ptr(model));
+	/*program.setUniformMat4("model", glm::value_ptr(model));*/
 	program.setUniformMat4("view", glm::value_ptr(view));
 	program.setUniformMat4("projection", glm::value_ptr(projection));
 
@@ -219,6 +219,11 @@ void Engine::renderFrame()
 	program.setUniformVec3("light.diffuse", &(lightSource->getDiffuseColor())[0]);
 	program.setUniformVec3("light.specular", &(lightSource->getSpecularColor())[0]);
 	program.setUniformVec3("light.position", &(lightSource->getPosition())[0]);
+	program.setUniformVec3("light.direction", &(lightSource->getDirection())[0]);
+
+	program.setUniformFloat("light.constant", lightSource->getAttenuation().x);
+	program.setUniformFloat("light.linear", lightSource->getAttenuation().y);
+	program.setUniformFloat("light.quadratic", lightSource->getAttenuation().z);
 
 	program.setUniformInt("material.diffuse", 0);
 	program.setUniformInt("material.specular", 1);
@@ -232,7 +237,17 @@ void Engine::renderFrame()
 
 	glBindVertexArray(vao);
 	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 288);
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
+	for (unsigned int i = 0; i < 10; i++)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		float angle = 20.0f * i;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		program.setUniformMat4("model", &model[0][0]);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 	lightProgram.useProgram();
 
