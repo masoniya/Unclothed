@@ -5,6 +5,9 @@
 #include "ShaderProgram.h"
 
 
+//#define ULTRA_DEBUG_MODE
+
+
 void ShaderProgram::compileShaders(const char *vertPath, const char *fragPath)
 {
 	uint32_t vertexShader;
@@ -47,16 +50,83 @@ void ShaderProgram::useProgram()
 void ShaderProgram::setUniformInt(const char* name, int value)
 {
 	glUniform1i(glGetUniformLocation(shaderProgram, name), value);
+
+#ifdef ULTRA_DEBUG_MODE
+	std::cout << "Assigning Integer " << name << " with the value : " << value << std::endl;
+#endif
 }
 
 void ShaderProgram::setUniformFloat(const char* name, float value)
 {
 	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
+
+#ifdef ULTRA_DEBUG_MODE
+	std::cout << "Assigning Float " << name << " with the value : " << value << std::endl;
+#endif
+}
+
+void ShaderProgram::setUniformVec3(const char* name, glm::vec3 value)
+{
+	setUniformVec3(name, &value[0]);
+}
+
+void ShaderProgram::setUniformVec3(const char* name, const float * value)
+{
+	glUniform3fv(glGetUniformLocation(shaderProgram, name), 1, value);
+
+#ifdef ULTRA_DEBUG_MODE
+	std::cout << "Assigning Vec3 " << name << " with the value : " << vec3ToStr(value) << std::endl;
+#endif
+}
+
+void ShaderProgram::setUniformMat4(const char * name, glm::mat4 value)
+{
+	setUniformMat4(name, &value[0][0]);
 }
 
 void ShaderProgram::setUniformMat4(const char * name, const float * value)
 {
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, name), 1, GL_FALSE, value);
+
+#ifdef ULTRA_DEBUG_MODE
+	std::cout << "Assigning Integer " << name << " with the value : " << mat4ToStr(value) << std::endl;
+#endif
+}
+
+void ShaderProgram::setUniformDirLight(std::string name, DirectionalLight value)
+{
+	setUniformVec3((name + ".ambient").c_str(), value.ambientColor);
+	setUniformVec3((name + ".diffuse").c_str(), value.diffuseColor);
+	setUniformVec3((name + ".specular").c_str(), value.specularColor);
+	setUniformVec3((name + ".direction").c_str(), value.direction);
+}
+
+void ShaderProgram::setUniformPointLight(std::string name, PointLight value)
+{
+	setUniformVec3((name + ".ambient").c_str(), value.ambientColor);
+	setUniformVec3((name + ".diffuse").c_str(), value.diffuseColor);
+	setUniformVec3((name + ".position").c_str(), value.position);
+	setUniformVec3((name + ".specular").c_str(), value.specularColor);
+
+	setUniformFloat((name + ".constant").c_str(), value.attenuation.constant);
+	setUniformFloat((name + ".linear").c_str(), value.attenuation.linear);
+	setUniformFloat((name + ".quadratic").c_str(), value.attenuation.quadratic);
+}
+
+void ShaderProgram::setUniformSpotLight(std::string name, SpotLight value)
+{
+	setUniformVec3((name + ".ambient").c_str(), value.ambientColor);
+	setUniformVec3((name + ".diffuse").c_str(), value.diffuseColor);
+	setUniformVec3((name + ".specular").c_str(), value.specularColor);
+	setUniformVec3((name + ".position").c_str(), value.position);
+	setUniformVec3((name + ".direction").c_str(), value.direction);
+
+	setUniformFloat((name + ".constant").c_str(), value.attenuation.constant);
+	setUniformFloat((name + ".linear").c_str(), value.attenuation.linear);
+	setUniformFloat((name + ".quadratic").c_str(), value.attenuation.quadratic);
+	setUniformFloat((name + ".cutOff").c_str(), value.cutOff);
+	setUniformFloat((name + ".outerCutOff").c_str(), value.outerCutOff);
+
 }
 
 void ShaderProgram::compileShader(const char *path, uint32_t shader)

@@ -4,31 +4,61 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Texture.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "LightSource.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1366;
+const int HEIGHT = 768;
 
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
 
-//This is also acceptable syntax for c strings as arrays are constant by nature
-//const char vertexShaderPath[] = "shaders/shader.vert";
-//const char fragmentShaderPath[] = "shaders/shader.frag";
+const char lampVertShaderPath[] = "shaders/LampShader.vert";
+const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
-const std::string wallPath = "resources/wall.jpg";
-const std::string facePath = "resources/pepe.png";
+const std::string diffPath = "resources/box_diffuse.png";
+const std::string specPath = "resources/box_specular.png";
 
+const glm::vec3 cubePositions[] = {
+	glm::vec3( 0.0f,  0.0f,  0.0f),
+	glm::vec3( 2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3( 2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3( 1.3f, -2.0f, -2.5f),
+	glm::vec3( 1.5f,  2.0f, -2.5f),
+	glm::vec3( 1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
+struct Material {
+	Texture *diffuseMap;
+	Texture *specularMap;
+	float shininess;
+
+	Material(std::string diffMapPath, std::string specMapPath, float shininess) {
+		this->diffuseMap = new Texture(diffMapPath);
+		this->specularMap = new Texture(specMapPath);
+		this->shininess = shininess;
+	}
+
+	~Material() {
+		delete diffuseMap;
+		delete specularMap;
+	}
+};
 
 class Engine
 {
@@ -38,7 +68,7 @@ public:
 	void start();
 
 private:
-	float vertices[64];
+	float vertices[288];
 	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;
@@ -46,11 +76,14 @@ private:
 	int attribCount;
 
 	ShaderProgram program;
+	ShaderProgram lampProgram;
 	Window *window;
-	Texture *wallTexture;
-	Texture *faceTexture;
-	Camera *mainCamera;
+	Camera *camera;
 	InputManager *inputManager;
+	DirectionalLight *sunlight;
+	PointLight *lamps[4];
+	SpotLight *flashlight;
+	Material *material;
 
 	void init();
 	void mainLoop();
@@ -58,6 +91,7 @@ private:
 	
 	void initWindow();
 	void initShaderProgram();
+	void initLights();
 	void createVertexObjects();
 	void enableAttributes();
 	
