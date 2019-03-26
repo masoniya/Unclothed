@@ -4,10 +4,8 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
 #include "Window.h"
@@ -15,10 +13,13 @@
 #include "Camera.h"
 #include "InputManager.h"
 #include "LightSource.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1366;
+const int HEIGHT = 768;
 
 const char* const vertexShaderPath = "shaders/shader.vert";
 const char* const fragmentShaderPath = "shaders/shader.frag";
@@ -75,11 +76,13 @@ private:
 	int attribCount;
 
 	ShaderProgram program;
-	ShaderProgram lightProgram;
+	ShaderProgram lampProgram;
 	Window *window;
 	Camera *camera;
 	InputManager *inputManager;
-	LightSource *lightSource;
+	DirectionalLight *sunlight;
+	PointLight *lamps[4];
+	SpotLight *flashlight;
 	Material *material;
 
 	void init();
@@ -88,6 +91,7 @@ private:
 	
 	void initWindow();
 	void initShaderProgram();
+	void initLights();
 	void createVertexObjects();
 	void enableAttributes();
 	

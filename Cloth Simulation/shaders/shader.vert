@@ -5,7 +5,7 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
 out vec3 fragPos;
-out vec3 normal;
+out vec3 fragNormal;
 out vec2 texCoords;
 
 uniform mat4 model;
@@ -16,6 +16,6 @@ void main()
 {
 	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	fragPos = vec3(model * vec4(aPos, 1.0)); //fragment position in 3D world space
-	normal = mat3(transpose(inverse(model))) * aNormal; //fragment normal in 3D world space
+	fragNormal = mat3(transpose(inverse(model))) * aNormal; //fragment normal in 3D world space
 	texCoords = aTexCoords; //fragment texture coordinate
 }

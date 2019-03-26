@@ -4,8 +4,8 @@
 #include "Camera.h"
 
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1366;
+const int HEIGHT = 768;
 
 const float minFov = 1.0f;
 const float maxFov = 45.0f;
@@ -27,7 +27,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 front, glm::vec3 up)
 
 void Camera::construct(glm::vec3 position, glm::vec3 front, glm::vec3 up)
 {
-	cameraSpeed = 0.005f;
+	cameraSpeed = 5.0f;
 
 	cameraPosition = position;
 	cameraFront = front;
@@ -55,16 +55,16 @@ glm::mat4 Camera::project()
 //change position
 void Camera::manageKeyboardInput(GLFWwindow *window)
 {
-	cameraSpeed = 2.5f * deltaTime;
+	float currentCameraSpeed = cameraSpeed * deltaTime;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPosition += cameraSpeed * cameraFront;
+		cameraPosition += currentCameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPosition -= cameraSpeed * cameraFront;
+		cameraPosition -= currentCameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * currentCameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * currentCameraSpeed;
 
 	updateView();
 }
