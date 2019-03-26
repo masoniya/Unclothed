@@ -1,6 +1,7 @@
 #pragma once
 
 #include<glm/glm.hpp>
+#include <iostream>
 
 class PointMass
 {
@@ -10,28 +11,32 @@ class PointMass
 public:
 
 	PointMass();
-	~PointMass();
-
-	void init(float mass, glm::vec3 position, glm::vec3 velocity);
-
-	void addForce(const glm::vec3 &force);
-	void clearAccum();
+	PointMass(float, glm::vec3);
+	
 
 	
-	void update(float deltaTime);
-
+	void addForce(const glm::vec3 &force);
+	void clearAccum();
+	void printPos();
+	
+	
 	float getMass();
+	glm::vec3 getPosition();
+	glm::vec3 getVelocity();
+	glm::vec3 getAcceleration();
+
+
+	void setPosition(glm::vec3 pos);
+	void setMass(float mass);
 
 private:
 	float mass;
 
 	glm::vec3 position;
 	glm::vec3 velocity;
-	
-
-	//for accumulating forces on the point Mass
 	glm::vec3 forceAccum;
 
+	void init(float mass, glm::vec3 position, glm::vec3 velocity);
 
 
 

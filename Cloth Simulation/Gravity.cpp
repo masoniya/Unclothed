@@ -1,21 +1,25 @@
 #include "Gravity.h"
 
-
-
 Gravity::Gravity()
 {
+	gravity = glm::vec3(0, -9.8f, 0);
 }
 
-
-Gravity::~Gravity()
+Gravity::Gravity(glm::vec3 grav)
 {
+	gravity = glm::vec3(grav);
 }
 
-void Gravity::applyForce(PointMass * pointmass)
+
+
+
+void Gravity::applyForce()
 {
-	//check that partcle mass isnt zero
+	for (PointMass* pointMass : points) {
 
-	/*pointmass->addForce(gravity* pointmass->getMass );*/
-	
-	
+		pointMass->addForce(gravity* pointMass->getMass());
+	}
+
 }
+
+

@@ -1,16 +1,15 @@
-#pragma once
+	#pragma once
 
+#include <vector>
 #include "PointMass.h"
+
 
 class ForceGenerator
 {
 
 
 public:
-	ForceGenerator();
-	~ForceGenerator();
 
-
-	virtual void applyForce(PointMass* pointmass)=0;
+	virtual void applyForce()=0;
 };
 

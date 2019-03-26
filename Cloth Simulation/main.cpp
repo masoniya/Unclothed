@@ -1,11 +1,12 @@
 #include <iostream>
 
-#include "Engine.h"
+//#include "Engine.h"
 
+#include "Cloth.h"
 
 int main(int argc, char** argv) {
 
-	Engine engine;
+	/*Engine engine;
 
 	try {
 		engine.start();
@@ -16,5 +17,13 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 
-	return EXIT_SUCCESS;
+	return EXIT_SUCCESS;*/
+
+
+	Cloth* cloth = new Cloth(glm::vec3(0.5, 0.5, 0), 10, 10, 0.5, 0.5);
+
+	getchar();
+	
+	std::cout << "";
+	
 }

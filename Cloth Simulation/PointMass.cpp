@@ -4,16 +4,16 @@
 
 PointMass::PointMass()
 {
-	init(1.0f, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+	init(1.0f, glm::vec3(0, 1.0f, 0), glm::vec3(0, 0, 0));
 
 }
 
-//might add a constructer with arguments here later
-
-PointMass::~PointMass()
+PointMass::PointMass(float mass, glm::vec3 pos)
 {
+	init(mass, pos, glm::vec3(0, 0, 0));
 
 }
+
 
 void PointMass::init(float mass, glm::vec3 position, glm::vec3 velocity)
 {
@@ -24,16 +24,34 @@ void PointMass::init(float mass, glm::vec3 position, glm::vec3 velocity)
 
 }
 
-//later on will pass along an integrator to update the velocity and position according to an algorithm
-void PointMass::update(float deltaTime)
-{
 
 
-
-}
 float PointMass::getMass()
 {
 	return this->mass;
+}
+glm::vec3 PointMass::getPosition()
+{
+	return position;
+}
+glm::vec3 PointMass::getVelocity()
+{
+	return velocity;
+}
+glm::vec3 PointMass::getAcceleration()
+{
+
+	return forceAccum / mass;
+}
+void PointMass::setPosition(glm::vec3 pos)
+{
+	this->position = pos;
+
+}
+void PointMass::setMass(float mass)
+{
+	this->mass = mass;
+
 }
 void PointMass::addForce(const glm::vec3 &force)
 {
@@ -44,4 +62,10 @@ void PointMass::addForce(const glm::vec3 &force)
 void PointMass::clearAccum()
 {
 	forceAccum = glm::vec3(0, 0, 0);
+}
+
+void PointMass::printPos()
+{
+	std::cout << position.x <<" "<< position.y << "\n";
+
 }

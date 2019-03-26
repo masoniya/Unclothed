@@ -5,24 +5,18 @@
 
 #include "glm/glm.hpp"
 
-
-
 class Gravity : public ForceGenerator
 {
 public:
 	Gravity();
-	Gravity(glm::vec3 gravity);
-	
+	~Gravity();
 
-	virtual void applyForce();
+	virtual void applyForce(PointMass* pointmass);
 
 
 private:
 	glm::vec3 gravity;
-	std::vector<PointMass*> points;
 
-	
-	
 
 };
 

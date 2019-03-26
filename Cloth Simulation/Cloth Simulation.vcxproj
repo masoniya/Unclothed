@@ -129,28 +129,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cloth.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="Face.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PointMass.cpp" />
+    <ClCompile Include="SemiImpEuler.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cloth.h" />
+    <ClInclude Include="DeformableBody.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="Face.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="Gravity.h" />
+    <ClInclude Include="Integrator.h" />
     <ClInclude Include="MouseControl.h" />
     <ClInclude Include="KeyboardControl.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PointMass.h" />
+    <ClInclude Include="SemiImpEuler.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
