@@ -13,11 +13,16 @@ public:
 
 	void update();
 
+	void disablePrinting();
+	void enablePrinting();
+
 private:
+	bool printFps;
 	unsigned int fpsSamples;
 
 	float *recentFrameTimes;
 	float prevTime;
 
 	unsigned int currentFrame;
+	unsigned int frameSinceLastReport;
 };
