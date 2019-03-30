@@ -19,7 +19,10 @@ public:
 	void useProgram();
 
 	void setUniformInt(const char* name, int value);
+	void setUniformInt(std::string name, int value);
+
 	void setUniformFloat(const char* name, float value);
+	void setUniformFloat(std::string name, float value);
 
 	void setUniformVec3(const char* name, glm::vec3 value);
 	void setUniformVec3(const char* name, const float *value);

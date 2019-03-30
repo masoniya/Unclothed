@@ -1,16 +1,8 @@
 #include "Vertex.h"
 
-Vertex::Vertex(float x, float y, float z)
+Vertex::Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords)
 {
-	coords.setCoords(x, y, z);
-}
-
-void Vertex::setCoords(float x, float y, float z)
-{
-	coords.setCoords(x, y, z);
-}
-
-Coords Vertex::getCoords()
-{
-	return Coords();
+	this->position = position;
+	this->normal = normal;
+	this->texCoords = texCoords;
 }

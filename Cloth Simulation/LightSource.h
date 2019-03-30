@@ -6,6 +6,10 @@
 #include <glm/glm.hpp>
 
 
+//to prevent circular includes use forward declaration in the header file and include the header in the cpp file
+class IndexedMesh;
+class ShaderProgram;
+
 struct Attenuation {
 	float constant;
 	float linear;
@@ -18,19 +22,13 @@ public:
 	LightSource();
 	LightSource(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor);
 
-	void init();
-	void use();
-	void unuse();
+	void initDefaultMesh();
+	void draw(ShaderProgram program);
 
 	glm::vec3 ambientColor;
 	glm::vec3 diffuseColor;
 	glm::vec3 specularColor;
 
 private:
-	float vertices[24];
-	uint32_t indices[36];
-	uint32_t vbo;
-	uint32_t vao;
-	uint32_t ebo;
-
+	IndexedMesh *lightMesh;
 };

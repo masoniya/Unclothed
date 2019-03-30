@@ -56,6 +56,11 @@ void ShaderProgram::setUniformInt(const char* name, int value)
 #endif
 }
 
+void ShaderProgram::setUniformInt(std::string name, int value)
+{
+	setUniformInt(name.c_str(), value);
+}
+
 void ShaderProgram::setUniformFloat(const char* name, float value)
 {
 	glUniform1f(glGetUniformLocation(shaderProgram, name), value);
@@ -63,6 +68,11 @@ void ShaderProgram::setUniformFloat(const char* name, float value)
 #ifdef ULTRA_DEBUG_MODE
 	std::cout << "Assigning Float " << name << " with the value : " << value << std::endl;
 #endif
+}
+
+void ShaderProgram::setUniformFloat(std::string name, float value)
+{
+	setUniformFloat(name.c_str(), value);
 }
 
 void ShaderProgram::setUniformVec3(const char* name, glm::vec3 value)

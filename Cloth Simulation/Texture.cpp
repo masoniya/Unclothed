@@ -75,7 +75,8 @@ void Texture::construct(std::string texturePath, int minFilter, int magFilter)
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &texture);
+	//TODO : figure out when to do this
+	//glDeleteTextures(1, &texture);
 }
 
 void Texture::setMinFilter(int filter)

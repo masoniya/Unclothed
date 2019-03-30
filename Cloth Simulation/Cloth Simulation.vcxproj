@@ -132,11 +132,14 @@
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="FpsCounter.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Gravity.cpp" />
+    <ClCompile Include="IndexedMesh.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointMass.cpp" />
     <ClCompile Include="ToString.cpp" />
@@ -151,8 +154,11 @@
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="Gravity.h" />
+    <ClInclude Include="IndexedMesh.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="MouseControl.h" />
     <ClInclude Include="KeyboardControl.h" />
     <ClInclude Include="InputManager.h" />

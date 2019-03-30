@@ -1,11 +1,9 @@
 #include <cmath>
 #include <sstream>
+#include <vector>
 
 #include "Engine.h"
 
-
-float deltaTime = 0.0f;
-float prevTime = 0.0f;
 
 Engine::Engine() :	
 	vertices{
@@ -16,12 +14,12 @@ Engine::Engine() :
 		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,	1.0f,  0.0f, 0.0f,
 
 		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
@@ -90,21 +88,20 @@ void Engine::init()
 	inputManager->registerMouseInput(camera);
 	inputManager->registerScrollInput(camera);
 
-	createVertexObjects();
-
 	material = new Material(diffPath, specPath, 32.0f);
 
-	initLights();
+	//createVertexObjects();
+	initMesh();
 
+	initLights();
+	
 	glEnable(GL_DEPTH_TEST);
 }
 
 void Engine::mainLoop()
 {
 	while (!glfwWindowShouldClose(window->getWindow())) {
-		float currentTime = (float)glfwGetTime();
-		deltaTime = currentTime - prevTime;
-		prevTime = currentTime;
+		fpsCounter.update();
 
 		inputManager->handleKeyboardInput();
 
@@ -141,18 +138,8 @@ void Engine::initLights()
 {
 	Attenuation attenuation;
 	attenuation.constant = 1.0f;
-	attenuation.linear = 0.09f;
-	attenuation.quadratic = 0.032f;
-
-	Attenuation midAttenuation;
-	midAttenuation.constant = 1.0f;
-	midAttenuation.linear = 0.7f;
-	midAttenuation.quadratic = 0.017f;
-
-	Attenuation flashAttenuation;
-	flashAttenuation.constant = 1.0f;
-	flashAttenuation.linear = 0.045f;
-	flashAttenuation.quadratic = 0.0075f;
+	attenuation.linear = 0.045f;
+	attenuation.quadratic = 0.0075f;
 	
 	glm::vec3 yellow = glm::vec3(1.0f, 1.0f, 0.0f);
 	glm::vec3 white = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -176,14 +163,40 @@ void Engine::initLights()
 
 	for (int i = 0; i < 4; i++) {
 		lamps[i] = new PointLight(0.1f * pointLightColors[i], 1.5f * pointLightColors[i], white,
-			pointLightPositions[i], flashAttenuation);
-		lamps[i]->init();
+			pointLightPositions[i], attenuation);
+		lamps[i]->initDefaultMesh();
 	}
 
 	flashlight = new SpotLight(0.1f * white, white, white, camera->getCameraPosition(), camera->getCameraFront(),
-		cos(glm::radians(12.5f)), cos(glm::radians(17.5f)), flashAttenuation);
+		cos(glm::radians(12.5f)), cos(glm::radians(17.5f)), attenuation);
 
 	inputManager->registerKeyboardInput(flashlight);
+}
+
+void Engine::initMesh()
+{
+	std::vector<Texture> textureVec;
+	std::vector<Vertex> vertexVec;
+
+	textureVec.push_back(Texture(diffPath));
+	textureVec.back().type = TextureType::texture_diffuse;
+
+	textureVec.push_back(Texture(specPath));
+	textureVec.back().type = TextureType::texture_specular;
+
+	//the rule of three (also don't do opengl stuff in the destructor)
+	//textureVec.push_back(*material->diffuseMap);
+	//textureVec.push_back(*material->specularMap);
+
+	for (int n = 0; n < sizeof(vertices) / sizeof(vertices[0]); n += 8) {
+		vertexVec.push_back(Vertex(
+			glm::vec3(vertices[n], vertices[n + 1], vertices[n + 2]),
+			glm::vec3(vertices[n + 3], vertices[n + 4], vertices[n + 5]),
+			glm::vec2(vertices[n + 6], vertices[n + 7])
+		));
+	}
+
+	cubeMesh = new Mesh(vertexVec, textureVec);
 }
 
 void Engine::createVertexObjects()
@@ -207,9 +220,6 @@ void Engine::createVertexObjects()
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	enableAttributes();
 
@@ -244,9 +254,7 @@ void Engine::renderFrame()
 	program.setUniformMat4("view", view);
 	program.setUniformMat4("projection", projection);
 
-	//material
-	program.setUniformInt("material.diffuse", 0);
-	program.setUniformInt("material.specular", 1);
+	//material (figure out where to put the shininess)
 	program.setUniformFloat("material.shininess", material->shininess);
 
 	//directional light
@@ -262,16 +270,8 @@ void Engine::renderFrame()
 	//spotlight
 	program.setUniformSpotLight("spotLights[0]", *flashlight);
 
+	//view position (useful for specular lighting)
 	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
-
-	//activate the texture units
-	glActiveTexture(GL_TEXTURE0);
-	material->diffuseMap->useTexture();
-
-	glActiveTexture(GL_TEXTURE1);
-	material->specularMap->useTexture();
-
-	glBindVertexArray(vao);
 
 	//draw 10 boxes
 	for (unsigned int i = 0; i < 10; i++)
@@ -282,7 +282,7 @@ void Engine::renderFrame()
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setUniformMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		cubeMesh->draw(program);
 	}
 
 	lampProgram.useProgram();
@@ -299,8 +299,7 @@ void Engine::renderFrame()
 
 		lampProgram.setUniformVec3("lightColor", lamps[i]->diffuseColor);
 
-		lamps[i]->use();
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		lamps[i]->draw(program);
 	}
 
 	window->swapBuffers();

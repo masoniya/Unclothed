@@ -1,27 +1,14 @@
 #pragma once
 
-struct Coords
-{
-	float X;
-	float Y;
-	float Z;
-
-	void setCoords(float x, float y, float z) {
-		X = x; 
-		Y = y; 
-		Z = z;
-	}
-};
+#include <glm/glm.hpp>
 
 class Vertex
 {
-private:
-	Coords coords;
-
 public:
-	Vertex(float x, float y, float z);
+	Vertex(glm::vec3 position, glm::vec3 normal , glm::vec2 texCoords);
 
-	void setCoords(float x, float y, float z);
-	Coords getCoords();
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 texCoords;
 
 };

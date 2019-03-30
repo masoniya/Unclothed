@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 
 
+enum class TextureType { texture_diffuse, texture_specular };
+
 class Texture
 {
 public:
@@ -18,13 +20,13 @@ public:
 	static void setMinFilter(int filter);
 	static void setMagFilter(int filter);
 
-private:
 	uint32_t texture;
+	TextureType type;
 
+private:
 	void construct(std::string texturePath, int minFilter, int magFilter);
 
 	static int minFilter;
 	static int magFilter;
 
-	
 };

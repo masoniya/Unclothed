@@ -16,6 +16,8 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "FpsCounter.h"
+#include "Mesh.h"
 
 
 const int WIDTH = 1366;
@@ -50,7 +52,11 @@ struct Material {
 
 	Material(std::string diffMapPath, std::string specMapPath, float shininess) {
 		this->diffuseMap = new Texture(diffMapPath);
+		this->diffuseMap->type = TextureType::texture_diffuse;
+
 		this->specularMap = new Texture(specMapPath);
+		this->specularMap->type = TextureType::texture_specular;
+
 		this->shininess = shininess;
 	}
 
@@ -75,6 +81,8 @@ private:
 	uint32_t ebo;
 	int attribCount;
 
+	FpsCounter fpsCounter;
+
 	ShaderProgram program;
 	ShaderProgram lampProgram;
 	Window *window;
@@ -84,6 +92,7 @@ private:
 	PointLight *lamps[4];
 	SpotLight *flashlight;
 	Material *material;
+	Mesh *cubeMesh;
 
 	void init();
 	void mainLoop();
@@ -92,6 +101,7 @@ private:
 	void initWindow();
 	void initShaderProgram();
 	void initLights();
+	void initMesh();
 	void createVertexObjects();
 	void enableAttributes();
 	
