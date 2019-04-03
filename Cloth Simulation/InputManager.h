@@ -8,6 +8,7 @@
 #include "MouseControl.h"
 #include "ScrollControl.h"
 
+
 class InputManager
 {
 public:

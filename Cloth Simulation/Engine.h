@@ -18,6 +18,8 @@
 #include "SpotLight.h"
 #include "FpsCounter.h"
 #include "Mesh.h"
+#include "Model.h"
+#include "ResourceManager.h"
 
 
 const int WIDTH = 1366;
@@ -31,6 +33,8 @@ const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
 const std::string diffPath = "resources/box_diffuse.png";
 const std::string specPath = "resources/box_specular.png";
+
+const std::string modelPath = "resources/nanosuit/nanosuit.obj";
 
 const glm::vec3 cubePositions[] = {
 	glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -93,6 +97,7 @@ private:
 	SpotLight *flashlight;
 	Material *material;
 	Mesh *cubeMesh;
+	Model *armor;
 
 	void init();
 	void mainLoop();
@@ -105,6 +110,9 @@ private:
 	void createVertexObjects();
 	void enableAttributes();
 	
-	void renderFrame();
+	void drawBoxes(glm::mat4 projection, glm::mat4 view);
+	void drawArmor(glm::mat4 projection, glm::mat4 view);
+	void drawLamps(glm::mat4 projection, glm::mat4 view);
 
+	void renderFrame();
 };

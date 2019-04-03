@@ -73,6 +73,6 @@ void Mesh::draw(ShaderProgram program)
 	activateTextures(program);
 
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices.size());
 	glBindVertexArray(0);	
 }

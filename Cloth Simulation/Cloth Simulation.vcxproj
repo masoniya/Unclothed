@@ -140,8 +140,10 @@
     <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointMass.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ToString.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -159,11 +161,13 @@
     <ClInclude Include="IndexedMesh.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="MouseControl.h" />
     <ClInclude Include="KeyboardControl.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PointMass.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="ScrollControl.h" />
     <ClInclude Include="ShaderProgram.h" />

@@ -6,30 +6,39 @@
 #include "Texture.h"
 
 
-int Texture::minFilter = GL_LINEAR_MIPMAP_LINEAR;
-int Texture::magFilter = GL_LINEAR;
+int Texture::defaultMinFilter = GL_LINEAR_MIPMAP_LINEAR;
+int Texture::defaultMagFilter = GL_LINEAR;
 
 //in this constructor the filters used are the global filters
 Texture::Texture(std::string texturePath)
 {
-	construct(texturePath, minFilter, magFilter);
+	construct(texturePath, TextureType::texture_diffuse, defaultMinFilter, defaultMagFilter);
+}
+
+Texture::Texture(std::string texturePath, TextureType type)
+{
+	construct(texturePath, type, defaultMinFilter, defaultMagFilter);
 }
 
 //in this constructor the filters are passed as parameters
 Texture::Texture(std::string texturePath, int minFilter, int magFilter)
 {
-	construct(texturePath, minFilter, magFilter);
+	construct(texturePath, TextureType::texture_diffuse, minFilter, magFilter);
 }
 
+Texture::Texture(std::string texturePath, TextureType type, int minFilter, int magFilter)
+{
+	construct(texturePath, type, minFilter, magFilter);
+}
 
 
 void Texture::useTexture()
 {
-	//Automatically assigns the texture to the fragment shader's sampler
+	//Automatically assigns the texture to the fragment shader's active sampler
 	glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void Texture::construct(std::string texturePath, int minFilter, int magFilter)
+void Texture::construct(std::string texturePath, TextureType type, int minFilter, int magFilter)
 {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -44,22 +53,37 @@ void Texture::construct(std::string texturePath, int minFilter, int magFilter)
 
 	stbi_set_flip_vertically_on_load(true);
 
-	int width, height, numChannels;
-	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &numChannels, 0);
+	int width, height, numComponents;
+	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &numComponents, 0);
+
+	GLenum format;
 
 	//use file extension to determine color format
-	std::string fileExtension = texturePath.substr(texturePath.find_last_of(".") + 1);
-	int format;
+	//std::string fileExtension = texturePath.substr(texturePath.find_last_of(".") + 1);
 
-	if (fileExtension == "jpg") {
+	//if (fileExtension == "jpg") {
+	//	format = GL_RGB;
+	//}
+	//else if (fileExtension == "png") {
+	//	format = GL_RGBA;
+	//}
+	//else {
+	//	//default behavior
+	//	throw std::runtime_error("Unknown file extension");
+	//}
+
+	//Use number of components to determine color format
+	if (numComponents == 1) {
+		format = GL_RED;
+	}
+	else if (numComponents == 3) {
 		format = GL_RGB;
 	}
-	else if (fileExtension == "png") {
+	else if (numComponents == 4) {
 		format = GL_RGBA;
 	}
 	else {
-		//default behavior
-		throw std::runtime_error("Unknown file extension");
+		throw std::runtime_error("Unknown color format");
 	}
 
 	if (data != nullptr) {
@@ -71,20 +95,17 @@ void Texture::construct(std::string texturePath, int minFilter, int magFilter)
 	}
 
 	stbi_image_free(data);
+
+	this->path = texturePath;
+	this->type = type;
 }
 
-Texture::~Texture()
+void Texture::setDefaultMinFilter(int filter)
 {
-	//TODO : figure out when to do this
-	//glDeleteTextures(1, &texture);
+	defaultMinFilter = filter;
 }
 
-void Texture::setMinFilter(int filter)
+void Texture::setDefaultMagFilter(int filter)
 {
-	minFilter = filter;
-}
-
-void Texture::setMagFilter(int filter)
-{
-	magFilter = filter;
+	defaultMagFilter = filter;
 }

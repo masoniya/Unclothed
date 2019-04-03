@@ -5,6 +5,9 @@
 #include "Engine.h"
 
 
+//global resource manager (gotta change that somehow)
+ResourceManager resourceManager;
+
 Engine::Engine() :	
 	vertices{
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
@@ -88,12 +91,14 @@ void Engine::init()
 	inputManager->registerMouseInput(camera);
 	inputManager->registerScrollInput(camera);
 
-	material = new Material(diffPath, specPath, 32.0f);
+	material = new Material(diffPath, specPath, 64.0f);
 
 	//createVertexObjects();
 	initMesh();
 
 	initLights();
+
+	armor = new Model(modelPath);
 	
 	glEnable(GL_DEPTH_TEST);
 }
@@ -240,15 +245,8 @@ void Engine::enableAttributes()
 	}
 }
 
-void Engine::renderFrame()
+void Engine::drawBoxes(glm::mat4 projection, glm::mat4 view)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glm::mat4 view = camera->view();
-	glm::mat4 projection = camera->project();
-	flashlight->position = camera->getCameraPosition();
-	flashlight->direction = camera->getCameraFront();
-
 	program.useProgram();
 
 	program.setUniformMat4("view", view);
@@ -266,12 +264,17 @@ void Engine::renderFrame()
 		out << "pointLights[" << i << "]";
 		program.setUniformPointLight(out.str(), *lamps[i]);
 	}
-	
+
 	//spotlight
 	program.setUniformSpotLight("spotLights[0]", *flashlight);
 
 	//view position (useful for specular lighting)
 	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.3f));
+	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+	program.setUniformMat4("model", model);
 
 	//draw 10 boxes
 	for (unsigned int i = 0; i < 10; i++)
@@ -284,7 +287,45 @@ void Engine::renderFrame()
 
 		cubeMesh->draw(program);
 	}
+}
 
+void Engine::drawArmor(glm::mat4 projection, glm::mat4 view)
+{
+	program.useProgram();
+
+	program.setUniformMat4("view", view);
+	program.setUniformMat4("projection", projection);
+
+	//material (figure out where to put the shininess)
+	program.setUniformFloat("material.shininess", material->shininess);
+
+	//directional light
+	program.setUniformDirLight("dirLights[0]", *sunlight);
+
+	//point light
+	for (int i = 0; i < 4; i++) {
+		std::ostringstream out;
+		out << "pointLights[" << i << "]";
+		program.setUniformPointLight(out.str(), *lamps[i]);
+	}
+
+	//spotlight
+	program.setUniformSpotLight("spotLights[0]", *flashlight);
+
+	//view position (useful for specular lighting)
+	program.setUniformVec3("viewPosition", &(camera->getCameraPosition())[0]);
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.3f));
+	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+	program.setUniformMat4("model", model);
+
+	//insert draw calls here
+	armor->draw(program);
+}
+
+void Engine::drawLamps(glm::mat4 projection, glm::mat4 view)
+{
 	lampProgram.useProgram();
 
 	//draw the lamp cubes
@@ -301,6 +342,23 @@ void Engine::renderFrame()
 
 		lamps[i]->draw(program);
 	}
+}
+
+void Engine::renderFrame()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 view = camera->view();
+	glm::mat4 projection = camera->project();
+	flashlight->position = camera->getCameraPosition();
+	flashlight->direction = camera->getCameraFront();
+
+	drawArmor(projection, view);
+	
+	drawBoxes(projection, view);
+	
+	drawLamps(projection, view);
+	
 
 	window->swapBuffers();
 }
