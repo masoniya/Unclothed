@@ -2,13 +2,30 @@
 #include <sstream>
 
 #include "Engine.h"
+#include "PhysicsEngine.h"
 
 
 float deltaTime = 0.0f;
 float prevTime = 0.0f;
 
-Engine::Engine() :	
-	vertices{
+Engine::Engine() :
+	attribCount(0)
+	/*, vertices{
+
+	-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+	-0.5f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+	0.0f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+	0.0f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+	0.0f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f
+
+
+
+
+}*/
+
+
+/*	vertices{
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
@@ -50,7 +67,7 @@ Engine::Engine() :
 		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-	},
+	}*/,
 	indices{
 		0, 1, 2,	//front face
 		2, 3, 0,
@@ -69,11 +86,27 @@ Engine::Engine() :
 
 		4, 5, 6,	//back face
 		6, 7, 4,
-	},
-	attribCount(0)
+	}
+	
 {
+
 }
 
+void Engine::initcloth(float * vertexdata,int size)
+{
+	this->vertices = vertexdata;
+	this->size = size;
+
+	
+}
+void Engine::updatecloth(float* vertexdata,int size)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0,size*sizeof(float) , vertexdata);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	
+}
 
 void Engine::init()
 {
@@ -90,14 +123,19 @@ void Engine::init()
 	inputManager->registerMouseInput(camera);
 	inputManager->registerScrollInput(camera);
 
+	this->physics = new PhysicsEngine(this);
+
 	createVertexObjects();
 
-	material = new Material(diffPath, specPath, 32.0f);
+	material = new Material(diffPath, specPath, 11.0f);
 
 	initLights();
 
 	glEnable(GL_DEPTH_TEST);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
+
+
 
 void Engine::mainLoop()
 {
@@ -107,6 +145,7 @@ void Engine::mainLoop()
 		prevTime = currentTime;
 
 		inputManager->handleKeyboardInput();
+		this->physics->updatePhyics(deltaTime);
 
 		renderFrame();
 
@@ -197,7 +236,7 @@ void Engine::createVertexObjects()
 
 	//bind the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->size*sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
 	//bind the ebo
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -274,15 +313,16 @@ void Engine::renderFrame()
 	glBindVertexArray(vao);
 
 	//draw 10 boxes
+	
 	for (unsigned int i = 0; i < 10; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[i]);
-		float angle = 20.0f * i;
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		/*float angle = 90.0f;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f,0.0f));*/
 		program.setUniformMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, this->size/8);
 	}
 
 	lampProgram.useProgram();
@@ -312,3 +352,5 @@ void Engine::start()
 	mainLoop();
 	cleanup();
 }
+
+

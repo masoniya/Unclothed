@@ -17,6 +17,8 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
+#include "Render.h"
+#include "PhysicsEngine.h"
 
 const int WIDTH = 1366;
 const int HEIGHT = 768;
@@ -27,8 +29,9 @@ const char* const fragmentShaderPath = "shaders/shader.frag";
 const char lampVertShaderPath[] = "shaders/LampShader.vert";
 const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
-const std::string diffPath = "resources/box_diffuse.png";
-const std::string specPath = "resources/box_specular.png";
+//const std::string diffPath = "resources/box_diffuse.png";
+const std::string diffPath = "resources/carpet.jpg";
+const std::string specPath = "resources/Mona_Lisa.png";
 
 const glm::vec3 cubePositions[] = {
 	glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -60,15 +63,19 @@ struct Material {
 	}
 };
 
-class Engine
+class Engine : public Render
 {
 public:
 	Engine();
 
 	void start();
+	void initcloth(float * vertexdata,int size);
+	void updatecloth(float * vertexdata,int size);
 
 private:
-	float vertices[288];
+	float* vertices;
+	int size;
+	PhysicsEngine* physics;
 	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;

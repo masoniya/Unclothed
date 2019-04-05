@@ -3,13 +3,7 @@
 #include "PointMass.h"
 #include <vector>
   
-const float structural_const = 1;
-const float bending_const = 1;
-const float shearing_const = 1;
 
-const float structural_damp = 1;
-const float bending_damp = 1;
-const float shearing_damp = 1;
 
 
 class Spring

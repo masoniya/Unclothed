@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Integrator.h"
-
+#include <vector>
 class SemiImpEuler : public Integrator
 {
 public:
-	SemiImpEuler();
+	SemiImpEuler(std::vector<PointMass*> points);
 
-	void solve(float deltaTime);
+	void solve(float fixedDeltaTime);
 
-private:
+
 
 
 

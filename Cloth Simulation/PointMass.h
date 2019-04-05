@@ -11,13 +11,13 @@ class PointMass
 public:
 
 	PointMass();
-	PointMass(float, glm::vec3);
+	PointMass(float, glm::vec3,bool);
 	
 
 	
 	void addForce(const glm::vec3 &force);
 	void clearAccum();
-	void printPos();
+	
 	
 	
 	float getMass();
@@ -27,7 +27,11 @@ public:
 
 
 	void setPosition(glm::vec3 pos);
+	void setVelocity(glm::vec3 vel);
 	void setMass(float mass);
+	void setImmovable();
+
+	void printPos();
 
 private:
 	float mass;
@@ -36,7 +40,9 @@ private:
 	glm::vec3 velocity;
 	glm::vec3 forceAccum;
 
-	void init(float mass, glm::vec3 position, glm::vec3 velocity);
+	bool immovable;
+
+	void init(float mass, glm::vec3 position, glm::vec3 velocity,bool immovable);
 
 
 

@@ -14,18 +14,15 @@ Spring::Spring()
 }
 
 
-
 float Spring::getRestLength()
 {
-	
-
-	return restLength;
+	return this->restLength;
 }
 
 float Spring::getCurrentLength()
 {
 	glm::vec3 diff = pointMass1->getPosition() - pointMass2->getPosition();
-	return diff.length();
+	return glm::length(diff);
 
 }
 
@@ -33,20 +30,21 @@ float Spring::getCurrentLength()
 
 void Spring::applyForce()
 {
-	
-
 
 	glm::vec3 posDiff = pointMass1->getPosition() - pointMass2->getPosition();
+
 	glm::vec3 velDiff = pointMass1->getVelocity() - pointMass2->getVelocity();
+	
 
 	float length = getCurrentLength();
 
 
-	glm::vec3 dir = posDiff / length;
+	glm::vec3 dir = glm::normalize(posDiff);
 
 
-	glm::vec3 force = (springConst * (length - restLength) + dampingConst * velDiff * dir) *dir;
-	force -= 1;
+	glm::vec3 force = -(springConst * (length - restLength) ) *dir - (velDiff * dampingConst);
+	
+	/*+dampingConst * velDiff*/
 
 	pointMass1->addForce(force);
 	pointMass2->addForce(-force);
@@ -61,6 +59,8 @@ void Spring::init(float k, float d,  PointMass * particle1, PointMass * particle
 	this->pointMass1 = particle1;
 
 	this->pointMass2 = particle2;
+
+	this->restLength = glm::length(particle1->getPosition() - particle2->getPosition());
 
 }
 
