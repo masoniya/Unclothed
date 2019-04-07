@@ -1,22 +1,10 @@
 #pragma once
 
-#include "ForceGenerator.h"
-#include "PointMass.h"
 
-#include "glm/glm.hpp"
-
-class Gravity : public ForceGenerator
+class Gravity
 {
 public:
-	Gravity();
-	~Gravity();
-
-	virtual void applyForce(PointMass* pointmass);
-
-
-private:
-	glm::vec3 gravity;
-
-
+	
+	virtual void applyGravity(glm::vec3 gravityAccelration) = 0;
 };
 
