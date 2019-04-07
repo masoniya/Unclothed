@@ -18,7 +18,8 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	this->height = num_rows;
 	this->mass = mass;
 
-	//this->vertexData = new float[(width - 1)*(height - 1) * 8 * 6];
+	int size = (num_cols - 1)*(num_rows - 1) * 8 * 6;
+	this->vertexData = new float[size];
 
 	allPoints = new PointMass*[num_rows];
 
@@ -160,7 +161,7 @@ void Cloth::update(float deltaTime)
 
 float * Cloth::getVertexData()
 {
-	float * vertexData = new float[(width-1)*(height-1)*8*6];
+	//float * vertexData = new float[(width-1)*(height-1)*8*6];
 	int offset = 0;
 
 	for (int i = 0; i < height-1; i++) {

@@ -140,7 +140,6 @@
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GravitationalForce.cpp" />
-    <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="IndexedMesh.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="LightSource.cpp" />

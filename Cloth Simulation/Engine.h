@@ -33,9 +33,8 @@ const char* const fragmentShaderPath = "shaders/shader.frag";
 const char lampVertShaderPath[] = "shaders/LampShader.vert";
 const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
-//const std::string diffPath = "resources/box_diffuse.png";
-const std::string diffPath = "resources/carpet.jpg";
-const std::string specPath = "resources/Mona_Lisa.png";
+const std::string diffPath = "resources/clothTile.jpg";
+const std::string specPath = "resources/clothTile.jpg";
 
 const std::string modelPath = "resources/nanosuit/nanosuit.obj";
 

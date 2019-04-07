@@ -5,8 +5,8 @@
 #include "PhysicsEngine.h"
 
 
-float deltaTime = 0.0f;
-float prevTime = 0.0f;
+extern float deltaTime;
+ResourceManager resourceManager;
 
 Engine::Engine() :
 	attribCount(0)
@@ -104,8 +104,7 @@ void Engine::updatecloth(float* vertexdata,int size)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0,size*sizeof(float) , vertexdata);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	
+	//delete vertexdata;
 }
 
 void Engine::init()
@@ -140,9 +139,7 @@ void Engine::init()
 void Engine::mainLoop()
 {
 	while (!glfwWindowShouldClose(window->getWindow())) {
-		float currentTime = (float)glfwGetTime();
-		deltaTime = currentTime - prevTime;
-		prevTime = currentTime;
+		fpsCounter.update();
 
 		inputManager->handleKeyboardInput();
 		this->physics->updatePhyics(deltaTime);
@@ -216,7 +213,7 @@ void Engine::initLights()
 	for (int i = 0; i < 4; i++) {
 		lamps[i] = new PointLight(0.1f * pointLightColors[i], 1.5f * pointLightColors[i], white,
 			pointLightPositions[i], flashAttenuation);
-		lamps[i]->init();
+		lamps[i]->initDefaultMesh();
 	}
 
 	flashlight = new SpotLight(0.1f * white, white, white, camera->getCameraPosition(), camera->getCameraFront(),
@@ -229,18 +226,18 @@ void Engine::createVertexObjects()
 {
 	glGenBuffers(1, &vbo);
 	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &ebo);
+	//glGenBuffers(1, &ebo);
 
 	//bind the vao
 	glBindVertexArray(vao);
 
 	//bind the vbo
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, this->size*sizeof(float), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->size * sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
-	//bind the ebo
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	////bind the ebo
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -339,7 +336,7 @@ void Engine::renderFrame()
 
 		lampProgram.setUniformVec3("lightColor", lamps[i]->diffuseColor);
 
-		lamps[i]->use();
+		lamps[i]->draw(lampProgram);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 

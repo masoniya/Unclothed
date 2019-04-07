@@ -3,17 +3,19 @@
 #include "GravitationalForce.h"
 #include "DragForce.h"
 
+#include <glfw/glfw3.h>
+
 
 PhysicsEngine::PhysicsEngine(Render* renderer)
 {
 	this->renderer = renderer;
 
-	timeStep = (float) 1 / 30.0f;
-	timeAccumulator = 0;
+	timeStep = 1.0f / 60.0f;
+	timeAccumulator = 0.0f;
 
 	//initialize forces 
-	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -0.1f, 0));
-	DragForce * drag = new DragForce(-100000.0f);
+	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -9.8f, 0));
+	DragForce * drag = new DragForce(1.0f);
 
 	
 	this->externalForces.push_back(gravity);
@@ -30,22 +32,23 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 
 	this->physicalObjects.push_back(cloth);
 	gravity->addPhysicalObject(cloth);
-	//drag->addPhysicalObject(cloth);
+	drag->addPhysicalObject(cloth);
 	
 	int size = (width-1)*(height-1)  * 8 * 6;
 	this->renderer->initcloth(cloth->getVertexData(), size);
 	
-
-
-
-
 }
 
 void PhysicsEngine::updatePhyics(float deltaTime)
 {
+	static int iterations = 0;
+	static float fuckYouTimeAccumulator;
+	
+
 	this->timeAccumulator += deltaTime;
 
-	/*while (timeAccumulator >= timeStep) {*/
+	while (timeAccumulator >= timeStep) {
+		iterations++;
 
 		//apply the external forces
 		for (ForceGenerator* forceGenerator : externalForces) {
@@ -55,13 +58,20 @@ void PhysicsEngine::updatePhyics(float deltaTime)
 		//call update method on each body which calculates the internal forces and then integrates
 		for (DeformableBody* object : physicalObjects) {
 			object->update(timeStep);
+			
 		}
 
-
+		fuckYouTimeAccumulator += timeStep;
 		timeAccumulator -= timeStep;
 
 
-	/*}*/
+	}
+
+	static bool printed = false;
+	if (!printed && glfwGetTime() > 5.0f) {
+		std::cout << "iterations : " << iterations << " , Time elapsed : " << fuckYouTimeAccumulator << std::endl;
+		printed = true;
+	}
 
 	this->updateRenderer();
 
@@ -74,8 +84,3 @@ void PhysicsEngine::updateRenderer()
 	this->renderer->updatecloth(cloth->getVertexData(), (width - 1)*(height - 1) * 8 * 6);
 
 }
-
-
-
-
-

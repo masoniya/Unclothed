@@ -26,6 +26,5 @@ private:
 	int height;
 
 
-
 };
 

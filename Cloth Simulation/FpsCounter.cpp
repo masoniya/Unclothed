@@ -5,7 +5,7 @@
 
 float deltaTime = 0.0f;
 
-FpsCounter::FpsCounter() : fpsSamples(100), prevTime(0.0f), fps(0.0f), currentFrame(0), frameSinceLastReport(0), printFps(true)
+FpsCounter::FpsCounter() : fpsSamples(60), prevTime(0.0f), fps(0.0f), currentFrame(0), timeAccumulator(0), printFps(true)
 {
 	recentFrameTimes = new float[fpsSamples]();
 }
@@ -25,9 +25,11 @@ void FpsCounter::update()
 	float avgFrameTime = total / fpsSamples;
 	fps = 1.0f / avgFrameTime;
 
-	if (printFps && frameSinceLastReport++ > fps) {
-		std::cout << "fps : " << fps << std::endl;
-		frameSinceLastReport = 0;
+	timeAccumulator += deltaTime;
+
+	if (printFps && timeAccumulator > 1.0f) {
+		std::cout << "fps : " << fps << " , average frame time : " << avgFrameTime << " , delta time : " << deltaTime << std::endl;
+		timeAccumulator -= 1.0f;
 	}
 }
 

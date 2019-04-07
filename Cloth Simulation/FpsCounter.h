@@ -24,5 +24,5 @@ private:
 	float prevTime;
 
 	unsigned int currentFrame;
-	unsigned int frameSinceLastReport;
+	float timeAccumulator;
 };
