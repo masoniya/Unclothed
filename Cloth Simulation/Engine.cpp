@@ -131,6 +131,7 @@ void Engine::init()
 	initLights();
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
