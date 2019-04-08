@@ -42,6 +42,46 @@ void ShaderProgram::compileShaders(const char *vertPath, const char *fragPath)
 	glDeleteShader(fragmentShader);
 }
 
+void ShaderProgram::compileShaders(const char * vertPath, const char * geomPath, const char * fragPath)
+{
+	GLuint vertexShader;
+	GLuint geometryShader;
+	GLuint fragmentShader;
+
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	compileShader(vertPath, vertexShader);
+	compileShader(geomPath, geometryShader);
+	compileShader(fragPath, fragmentShader);
+
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, geometryShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	int success;
+	char infoLog[512];
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::string errorMessage("Shader program linking failed");
+		errorMessage += '\n';
+		throw std::runtime_error(errorMessage);
+	}
+
+	glDetachShader(shaderProgram, vertexShader);
+	glDetachShader(shaderProgram, geometryShader);
+	glDetachShader(shaderProgram, fragmentShader);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(geometryShader);
+	glDeleteShader(fragmentShader);
+}
+
 void ShaderProgram::useProgram()
 {
 	glUseProgram(shaderProgram);

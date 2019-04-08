@@ -1,6 +1,7 @@
 	#pragma once
 
 #include <vector>
+
 #include "PointMass.h"
 
 
@@ -12,4 +13,3 @@ public:
 
 	virtual void applyForce()=0;
 };
-

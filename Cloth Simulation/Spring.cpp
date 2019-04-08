@@ -1,7 +1,6 @@
 #include "Spring.h"
 
 
-
 Spring::Spring(float k, float d, PointMass * particle1, PointMass * particle2)
 {
 	init(k, d, particle1, particle2);
@@ -9,7 +8,6 @@ Spring::Spring(float k, float d, PointMass * particle1, PointMass * particle2)
 }
 Spring::Spring()
 {
-
 
 }
 
@@ -25,8 +23,6 @@ float Spring::getCurrentLength()
 	return glm::length(diff);
 
 }
-
-
 
 void Spring::applyForce()
 {
@@ -63,5 +59,3 @@ void Spring::init(float k, float d,  PointMass * particle1, PointMass * particle
 	this->restLength = glm::length(particle1->getPosition() - particle2->getPosition());
 
 }
-
-

@@ -1,13 +1,10 @@
-#include <glfw/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Engine.h"
 #include "Camera.h"
 
 
-const int WIDTH = 1366;
-const int HEIGHT = 768;
-
-const float minFov = 1.0f;
+const float minFov = 0.0000001f;
 const float maxFov = 45.0f;
 
 extern float deltaTime;
@@ -92,7 +89,7 @@ void Camera::manageMouseInput(double xOffset, double yOffset)
 void Camera::manageScrollInput(double xOffset, double yOffset)
 {
 	if (fov >= minFov && fov <= maxFov) {
-		fov -= yOffset;
+		fov -= (float) yOffset;
 	}
 	if (fov <= minFov) {
 		fov = minFov;

@@ -18,6 +18,10 @@ SpotLight::SpotLight(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 s
 	this->cutOff = cutOff;
 	this->outerCutOff = outerCutOff;
 	this->attenuation = attenuation;
+
+	//turn of flashlight by default
+	toggleLight();
+
 }
 
 void SpotLight::manageKeyboardInput(GLFWwindow * window)
@@ -25,17 +29,22 @@ void SpotLight::manageKeyboardInput(GLFWwindow * window)
 
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && !buttonDown) {
 		buttonDown = true;
-		//swap cutOff
-		float temp = cutOff;
-		cutOff = tempCutOff;
-		tempCutOff = temp;
-
-		//swap outerCutOff
-		temp = outerCutOff;
-		outerCutOff = tempOuterCutOff;
-		tempOuterCutOff = temp;
+		toggleLight();
 	}
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE && buttonDown) {
 		buttonDown = false;
 	}
+}
+
+void SpotLight::toggleLight()
+{
+	//swap cutOff
+	float temp = cutOff;
+	cutOff = tempCutOff;
+	tempCutOff = temp;
+
+	//swap outerCutOff
+	temp = outerCutOff;
+	outerCutOff = tempOuterCutOff;
+	tempOuterCutOff = temp;
 }

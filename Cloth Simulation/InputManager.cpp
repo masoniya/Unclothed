@@ -1,6 +1,6 @@
-#include "InputManager.h"
-
 #include <iostream>
+
+#include "InputManager.h"
 
 
 static void mouse_callback(GLFWwindow* window, double xPosition, double yPosition);

@@ -13,6 +13,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures)
 	setupMesh();
 }
 
+
 void Mesh::setupMesh()
 {
 	glGenVertexArrays(1, &vao);

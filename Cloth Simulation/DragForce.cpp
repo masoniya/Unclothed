@@ -11,6 +11,7 @@ DragForce::DragForce(float damp)
 	this->damp = damp;
 }
 
+
 void DragForce::applyForce()
 {
 	for (Drag* object : physicalObjects) {
@@ -23,8 +24,3 @@ void DragForce::addPhysicalObject(Drag * body)
 {
 	physicalObjects.push_back(body);
 }
-
-
-
-
-

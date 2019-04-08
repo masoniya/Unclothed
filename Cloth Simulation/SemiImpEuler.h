@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Integrator.h"
 #include <vector>
+
+#include "Integrator.h"
+
+
 class SemiImpEuler : public Integrator
 {
 public:
@@ -15,4 +18,3 @@ public:
 
 
 };
-

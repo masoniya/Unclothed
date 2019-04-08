@@ -2,7 +2,6 @@
 #include <sstream>
 
 #include "Engine.h"
-#include "PhysicsEngine.h"
 
 
 extern float deltaTime;
@@ -104,7 +103,6 @@ void Engine::updatecloth(float* vertexdata,int size)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0,size*sizeof(float) , vertexdata);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//delete vertexdata;
 }
 
 void Engine::init()
@@ -132,10 +130,10 @@ void Engine::init()
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK); //default is back
+	glFrontFace(GL_CCW); //default is ccw
 }
-
-
 
 void Engine::mainLoop()
 {
@@ -170,7 +168,7 @@ void Engine::initWindow()
 
 void Engine::initShaderProgram()
 {
-	program.compileShaders(vertexShaderPath, fragmentShaderPath);
+	program.compileShaders(vertexShaderPath, geometryShaderPath, fragmentShaderPath);
 	lampProgram.compileShaders(lampVertShaderPath, lampFragShaderPath);
 }
 
@@ -245,9 +243,6 @@ void Engine::createVertexObjects()
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glVertexAttribPointer(attribCount++, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-
 	enableAttributes();
 
 	//unbind the vbo
@@ -310,14 +305,12 @@ void Engine::renderFrame()
 
 	glBindVertexArray(vao);
 
-	//draw 10 boxes
+	//draw 10 cloths
 	
 	for (unsigned int i = 0; i < 10; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[i]);
-		/*float angle = 90.0f;
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f,0.0f));*/
 		program.setUniformMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, this->size/8);
@@ -350,5 +343,3 @@ void Engine::start()
 	mainLoop();
 	cleanup();
 }
-
-

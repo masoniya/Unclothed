@@ -1,12 +1,10 @@
 #pragma once
 
-
 #include "glm/glm.hpp"
 #include <vector>
 
 #include "ForceGenerator.h"
 #include "Gravity.h"
-
 
 
 class GravitationalForce : public ForceGenerator
@@ -25,12 +23,4 @@ private:
 	glm::vec3 gravityAcceleration;
 	std::vector<Gravity*> physicalObjects;
 
-
-
-	
-
-	
-	
-
 };
-

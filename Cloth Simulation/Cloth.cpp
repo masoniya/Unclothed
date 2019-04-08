@@ -1,5 +1,6 @@
-#include "Cloth.h"
 #include <iostream>
+
+#include "Cloth.h"
 #include "SemiImpEuler.h"
 
 
@@ -7,7 +8,6 @@ Cloth::Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float 
 {
 	init(top_left, num_cols, num_rows, width, height,mass);
 }
-
 
 
 void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,float height,float mass)
@@ -67,7 +67,6 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	}
 	
 	
-
 	// add springs
 
 	for (int i = 0; i < num_rows; i++) {
@@ -126,8 +125,6 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	}
 
 
-	
-
 	solver = new SemiImpEuler(points);
 	
 
@@ -142,13 +139,11 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	}
 	std::cout << "\n..............................................\n";*/
 	
-
 }
 
 void Cloth::update(float deltaTime)
 {
 	
-
 	//apply internal forces
 	for (Spring* spring : allSprings) {
 		spring->applyForce();
@@ -173,11 +168,11 @@ float * Cloth::getVertexData()
 			glm::vec3 bottomright = allPoints[i+1][j+1].getPosition();
 			glm::vec3 topright = allPoints[i][j+1].getPosition();
 
-			glm::vec3 normal1 = Face::calcNormal(topleft, bottomright,bottomleft);
+			//Make sure to calculate the normals using counter-clockwise order for vertices
+			glm::vec3 normal1 = Face::calcNormal(topleft, bottomleft,bottomright);
+			glm::vec3 normal2 = Face::calcNormal(topleft, bottomright, topright);
 
-			glm::vec3 normal2 = Face::calcNormal(topleft, topright, bottomright);
-
-
+			//Make sure both triangles are drawn counter-clockwise
 
 			//top left
 			vertexData[offset++] = topleft.x;
@@ -187,10 +182,6 @@ float * Cloth::getVertexData()
 			vertexData[offset++] = normal1.x;
 			vertexData[offset++] = normal1.y;
 			vertexData[offset++] = normal1.z;
-
-			/*vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
 
 			vertexData[offset++] = 0.0f;
 			vertexData[offset++] = 1.0f;
@@ -204,10 +195,6 @@ float * Cloth::getVertexData()
 			vertexData[offset++] = normal1.y;
 			vertexData[offset++] = normal1.z;
 
-			/*vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
-
 			vertexData[offset++] = 0.0f;
 			vertexData[offset++] = 0.0f;
 
@@ -219,10 +206,6 @@ float * Cloth::getVertexData()
 			vertexData[offset++] = normal1.x;
 			vertexData[offset++] = normal1.y;
 			vertexData[offset++] = normal1.z;
-
-			/*vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
 
 			vertexData[offset++] = 1.0f;
 			vertexData[offset++] = 0.0f;
@@ -236,29 +219,7 @@ float * Cloth::getVertexData()
 			vertexData[offset++] = normal2.y;
 			vertexData[offset++] = normal2.z;
 
-			/*vertexData[offset++] = 0.0f;
 			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
-
-
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 1.0f;
-
-			//top right
-			vertexData[offset++] = topright.x;
-			vertexData[offset++] = topright.y;
-			vertexData[offset++] = topright.z;
-
-			vertexData[offset++] = normal2.x;
-			vertexData[offset++] = normal2.y;
-			vertexData[offset++] = normal2.z;
-
-			/*vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
-
-
-			vertexData[offset++] = 1.0f;
 			vertexData[offset++] = 1.0f;
 
 			//bottom right
@@ -270,19 +231,25 @@ float * Cloth::getVertexData()
 			vertexData[offset++] = normal2.y;
 			vertexData[offset++] = normal2.z;
 
-			/*vertexData[offset++] = 0.0f;
-			vertexData[offset++] = 0.0f;
-			vertexData[offset++] = -1.0f;*/
-
 			vertexData[offset++] = 1.0f;
 			vertexData[offset++] = 0.0f;
+
+			//top right
+			vertexData[offset++] = topright.x;
+			vertexData[offset++] = topright.y;
+			vertexData[offset++] = topright.z;
+
+			vertexData[offset++] = normal2.x;
+			vertexData[offset++] = normal2.y;
+			vertexData[offset++] = normal2.z;
+
+			vertexData[offset++] = 1.0f;
+			vertexData[offset++] = 1.0f;
 			
 		}
 
 	}
 	
-
 	return vertexData;
 
-	
 }

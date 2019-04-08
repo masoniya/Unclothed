@@ -6,6 +6,7 @@
 #include "MouseControl.h"
 #include "ScrollControl.h"
 
+
 class Camera : public KeyboardControl, public MouseControl, public ScrollControl
 {
 public:

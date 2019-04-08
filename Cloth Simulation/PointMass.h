@@ -1,23 +1,20 @@
 #pragma once
 
-#include<glm/glm.hpp>
 #include <iostream>
+
+#include<glm/glm.hpp>
+
 
 class PointMass
 {
-
-
-
 public:
 
 	PointMass();
 	PointMass(float, glm::vec3,bool);
 	
-
 	
 	void addForce(const glm::vec3 &force);
 	void clearAccum();
-	
 	
 	
 	float getMass();
@@ -44,12 +41,4 @@ private:
 
 	void init(float mass, glm::vec3 position, glm::vec3 velocity,bool immovable);
 
-
-
-
-
-	
-
-
 };
-

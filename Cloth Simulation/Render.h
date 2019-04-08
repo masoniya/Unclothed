@@ -1,4 +1,5 @@
 #pragma once
+
 class Render
 {
 public:
@@ -6,4 +7,3 @@ public:
 
 	virtual void updatecloth(float * vertexData,int size) = 0;
 };
-

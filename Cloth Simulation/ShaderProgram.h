@@ -16,6 +16,7 @@ class ShaderProgram
 public:
 
 	void compileShaders(const char* vertPath, const char* fragPath);
+	void compileShaders(const char* vertPath, const char* geomPath, const char* fragPath);
 	void useProgram();
 
 	void setUniformInt(const char* name, int value);

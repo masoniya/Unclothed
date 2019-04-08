@@ -1,10 +1,10 @@
 #include "SemiImpEuler.h"
 
+
 SemiImpEuler::SemiImpEuler(std::vector<PointMass*> points)
 {
 	this->points = points;
 }
-
 
 void SemiImpEuler::solve(float fixedDeltaTime)
 {
@@ -22,7 +22,5 @@ void SemiImpEuler::solve(float fixedDeltaTime)
 		point->clearAccum();
 
 	}
-	
 
 }
-

@@ -26,4 +26,6 @@ private:
 	bool buttonDown;
 	float tempCutOff;
 	float tempOuterCutOff;
+
+	void toggleLight();
 };

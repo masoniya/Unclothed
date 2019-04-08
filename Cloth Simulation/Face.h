@@ -2,6 +2,7 @@
 
 #include "PointMass.h"
 
+
 class Face
 {
 public:
@@ -18,7 +19,4 @@ private:
 	void init(PointMass* ,PointMass* , PointMass*);
 	void calcNormal();
 
-	
-
 };
-

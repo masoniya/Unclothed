@@ -20,23 +20,24 @@
 #include "Mesh.h"
 #include "Model.h"
 #include "ResourceManager.h"
-
 #include "Render.h"
 #include "PhysicsEngine.h"
+
 
 const int WIDTH = 1366;
 const int HEIGHT = 768;
 
-const char* const vertexShaderPath = "shaders/shader.vert";
-const char* const fragmentShaderPath = "shaders/shader.frag";
+const char* const vertexShaderPath = "shaders/mainShader.vert";
+const char* const geometryShaderPath = "shaders/mainShader.geom";
+const char* const fragmentShaderPath = "shaders/mainShader.frag";
 
 const char lampVertShaderPath[] = "shaders/LampShader.vert";
 const char lampFragShaderPath[] = "shaders/LampShader.frag";
 
 const std::string diffPath = "resources/clothTile.jpg";
-const std::string specPath = "resources/clothTile.jpg";
+const std::string specPath = "resources/clothSpecular.png";
 
-const std::string modelPath = "resources/nanosuit/nanosuit.obj";
+//const std::string modelPath = "resources/nanosuit/nanosuit.obj";
 
 const glm::vec3 cubePositions[] = {
 	glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -102,8 +103,8 @@ private:
 	PointLight *lamps[4];
 	SpotLight *flashlight;
 	Material *material;
-	Mesh *cubeMesh;
-	Model *armor;
+	//Mesh *cubeMesh;
+	//Model *armor;
 
 	void init();
 	void mainLoop();
@@ -112,13 +113,8 @@ private:
 	void initWindow();
 	void initShaderProgram();
 	void initLights();
-	void initMesh();
 	void createVertexObjects();
 	void enableAttributes();
-	
-	void drawBoxes(glm::mat4 projection, glm::mat4 view);
-	void drawArmor(glm::mat4 projection, glm::mat4 view);
-	void drawLamps(glm::mat4 projection, glm::mat4 view);
 
 	void renderFrame();
 };

@@ -11,8 +11,6 @@ GravitationalForce::GravitationalForce(glm::vec3 grav)
 }
 
 
-
-
 void GravitationalForce::applyForce()
 {
 	for (Gravity* object : physicalObjects) {
@@ -26,5 +24,3 @@ void GravitationalForce::addPhysicalObject(Gravity* body)
 {
 	physicalObjects.push_back(body);
 }
-
-

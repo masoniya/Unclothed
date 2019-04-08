@@ -11,6 +11,7 @@ Model::Model(std::string path)
 	loadModel(path);
 }
 
+
 void Model::draw(ShaderProgram program)
 {
 	for (unsigned int i = 0; i < meshes.size(); i++) {

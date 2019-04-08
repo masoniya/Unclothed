@@ -1,9 +1,9 @@
+#include <glfw/glfw3.h>
+
 #include "PhysicsEngine.h"
 #include "Cloth.h"
 #include "GravitationalForce.h"
 #include "DragForce.h"
-
-#include <glfw/glfw3.h>
 
 
 PhysicsEngine::PhysicsEngine(Render* renderer)
@@ -14,8 +14,8 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	timeAccumulator = 0.0f;
 
 	//initialize forces 
-	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -9.8f, 0));
-	DragForce * drag = new DragForce(1.0f);
+	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
+	DragForce * drag = new DragForce(0.5f);
 
 	
 	this->externalForces.push_back(gravity);
@@ -69,7 +69,7 @@ void PhysicsEngine::updatePhyics(float deltaTime)
 
 	static bool printed = false;
 	if (!printed && glfwGetTime() > 5.0f) {
-		std::cout << "iterations : " << iterations << " , Time elapsed : " << fuckYouTimeAccumulator << std::endl;
+		//std::cout << "iterations : " << iterations << " , Time elapsed : " << fuckYouTimeAccumulator << std::endl;
 		printed = true;
 	}
 

@@ -10,6 +10,7 @@ IndexedMesh::IndexedMesh(std::vector<Vertex> vertices, std::vector<unsigned int>
 	setupMesh();
 }
 
+
 void IndexedMesh::setupMesh()
 {
 	glGenVertexArrays(1, &vao);

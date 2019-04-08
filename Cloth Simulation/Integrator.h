@@ -1,7 +1,9 @@
 #pragma once
 
-#include "PointMass.h"
 #include <vector>
+
+#include "PointMass.h"
+
 
 class Integrator
 {
@@ -16,4 +18,3 @@ protected:
 
 
 };
-

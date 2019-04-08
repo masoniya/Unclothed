@@ -28,7 +28,7 @@ void FpsCounter::update()
 	timeAccumulator += deltaTime;
 
 	if (printFps && timeAccumulator > 1.0f) {
-		std::cout << "fps : " << fps << " , average frame time : " << avgFrameTime << " , delta time : " << deltaTime << std::endl;
+		std::cout << "fps : " << fps << " , average frame time : " << avgFrameTime << std::endl;
 		timeAccumulator -= 1.0f;
 	}
 }

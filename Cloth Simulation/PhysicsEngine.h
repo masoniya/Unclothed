@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+
 #include "DeformableBody.h"
 #include "Render.h"
+
 
 class PhysicsEngine
 {
@@ -25,6 +27,4 @@ private:
 	int width;
 	int height;
 
-
 };
-

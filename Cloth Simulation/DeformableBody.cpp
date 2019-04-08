@@ -15,7 +15,3 @@ void DeformableBody::applyDrag(float damp)
 		point->addForce(-point->getVelocity()*damp);
 	}
 }
-
-
-
-

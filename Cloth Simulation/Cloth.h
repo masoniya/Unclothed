@@ -1,18 +1,18 @@
 #pragma once
 
 #include <vector>
+
 #include "DeformableBody.h"
 #include "Spring.h"
 #include "PointMass.h"
 #include "Face.h"
 
+
 const float k_const_structure = 600.0f;
 const float k_const_shear = 600.0f;
 const float k_const_bending = 600.0f;
 
-const float damp = 0.5f;
-
-
+const float damp = 0.1f;
 
 class Cloth :public DeformableBody
 {
@@ -37,6 +37,4 @@ private:
 
 	//float * vertexData;
 
-
 };
-

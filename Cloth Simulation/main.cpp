@@ -2,13 +2,8 @@
 
 #include "Engine.h"
 
-#include "Cloth.h"
 
 int main(int argc, char** argv) {
-
-
-	
-
 	Engine engine;
 
 	try {
@@ -19,10 +14,5 @@ int main(int argc, char** argv) {
 		getchar();
 		return EXIT_FAILURE;
 	}
-
 	return EXIT_SUCCESS;
-
-
-
-	
 }

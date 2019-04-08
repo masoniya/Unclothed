@@ -1,10 +1,9 @@
 #pragma once
 
-#include "PointMass.h"
 #include <vector>
+
+#include "PointMass.h"
   
-
-
 
 class Spring
 {
@@ -18,12 +17,9 @@ public:
 	float getCurrentLength();
 	
 
-	
-
 	void applyForce();
 	
 	
-
 private:
 
 	float springConst;
@@ -35,6 +31,4 @@ private:
 
 	void init(float, float,  PointMass*, PointMass*);
 
-
 };
-
