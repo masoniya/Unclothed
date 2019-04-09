@@ -83,7 +83,7 @@ void PointMass::calculatePointNormal()
 	for (glm::vec3 normal : normalAccum) {
 		totalNormal += normal;
 	}
-	pointNormal = (1.0f / normalAccum.size()) * totalNormal;
+	pointNormal = glm::normalize((1.0f / normalAccum.size()) * totalNormal);
 	normalAccum.clear();
 }
 
