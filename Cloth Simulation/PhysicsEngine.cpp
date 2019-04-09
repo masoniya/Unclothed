@@ -4,7 +4,10 @@
 #include "Cloth.h"
 #include "GravitationalForce.h"
 #include "DragForce.h"
+#include "InputManager.h"
 
+
+extern InputManager *activeInputManager;
 
 PhysicsEngine::PhysicsEngine(Render* renderer)
 {
@@ -14,7 +17,7 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	timeAccumulator = 0.0f;
 
 	//initialize forces 
-	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
+	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -0.8f, 0));
 	DragForce * drag = new DragForce(0.5f);
 
 	
@@ -22,13 +25,12 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	this->externalForces.push_back(drag);
 
 
-
-
 	//initialize objects
 	width = 25;
 	height = 25;
 
 	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f,1.0f);
+	activeInputManager->registerKeyboardInput(cloth);
 
 	this->physicalObjects.push_back(cloth);
 	gravity->addPhysicalObject(cloth);

@@ -99,9 +99,6 @@
     <ClCompile Include="SemiImpEuler.cpp">
       <Filter>Source Files\Physics\Integrators</Filter>
     </ClCompile>
-    <ClCompile Include="Drag.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DragForce.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ForceGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,19 +18,21 @@ SpotLight::SpotLight(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 s
 	this->cutOff = cutOff;
 	this->outerCutOff = outerCutOff;
 	this->attenuation = attenuation;
+	
+	buttonDown = false;
 
 	//turn of flashlight by default
 	toggleLight();
-
 }
 
 void SpotLight::manageKeyboardInput(GLFWwindow * window)
 {
-
+	//button just got clicked
 	if ((glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) && !buttonDown) {
 		buttonDown = true;
 		toggleLight();
 	}
+	//button just got released
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE && buttonDown) {
 		buttonDown = false;
 	}

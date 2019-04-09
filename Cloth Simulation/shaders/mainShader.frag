@@ -65,7 +65,18 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragWorldPos, vec3 viewDir
 
 void main()
 {
+	/*
+	//this technique doesn't need face culling or correct normals
+	vec3 norm;
+	if(gl_FrontFacing){
+		norm = normalize(fragWorldNormal);
+	}
+	else {
+		norm = normalize(-fragWorldNormal);
+	}
+	*/
 	vec3 norm = normalize(fragWorldNormal);
+
 	vec3 viewDir = normalize(viewPosition - fragWorldPos);
 
 	vec3 resultColor;

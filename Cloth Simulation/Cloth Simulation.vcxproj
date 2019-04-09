@@ -132,10 +132,8 @@
     <ClCompile Include="DeformableBody.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Cloth.cpp" />
-    <ClCompile Include="Drag.cpp" />
     <ClCompile Include="DragForce.cpp" />
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="FpsCounter.cpp" />
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="glad.c" />

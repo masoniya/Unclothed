@@ -6,6 +6,7 @@
 #include "Spring.h"
 #include "PointMass.h"
 #include "Face.h"
+#include "KeyboardControl.h"
 
 
 const float k_const_structure = 600.0f;
@@ -14,18 +15,19 @@ const float k_const_bending = 600.0f;
 
 const float damp = 0.1f;
 
-class Cloth :public DeformableBody
+class Cloth : public DeformableBody, public KeyboardControl
 {
 public:
 	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass);
 	
-
 	void init(glm::vec3 top_left,int num_cols , int num_rows, float width, float height, float mass);
-	void  update(float deltaTime);
+	void update(float deltaTime);
 
 	float* getVertexData();
 
 	int width, height;
+
+	void manageKeyboardInput(GLFWwindow *window) override;
 
 private:
 
@@ -35,6 +37,7 @@ private:
 
 	float mass;
 
-	//float * vertexData;
+	bool buttonDown;
+	bool useVertexNormals;
 
 };

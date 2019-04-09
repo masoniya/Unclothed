@@ -13,10 +13,8 @@ public:
 	GravitationalForce();
 	GravitationalForce(glm::vec3 gravity);
 	
-
-	 void applyForce();
-	 void addPhysicalObject(Gravity* body);
-
+	void applyForce();
+	void addPhysicalObject(Gravity* body);
 
 private:
 

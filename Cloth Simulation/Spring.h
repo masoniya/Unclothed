@@ -8,17 +8,13 @@
 class Spring
 {
 public:
-
 	Spring();
 	Spring(float, float, PointMass *, PointMass *);
 	
-
 	float getRestLength();
 	float getCurrentLength();
 	
-
 	void applyForce();
-	
 	
 private:
 
@@ -28,7 +24,5 @@ private:
 	PointMass *pointMass1;
 	PointMass *pointMass2;
 
-
 	void init(float, float,  PointMass*, PointMass*);
-
 };

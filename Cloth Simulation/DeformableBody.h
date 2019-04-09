@@ -10,7 +10,7 @@
 #include "Drag.h"
 
 
-class DeformableBody :public Gravity,public Drag
+class DeformableBody : public Gravity, public Drag
 {
 public:
 	virtual void update(float deltaTime) = 0;

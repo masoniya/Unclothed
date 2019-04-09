@@ -13,7 +13,6 @@ public:
 	DragForce();
 	DragForce(float damp);
 
-
 private:
 
 	float damp;

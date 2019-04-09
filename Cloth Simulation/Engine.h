@@ -37,8 +37,6 @@ const char lampFragShaderPath[] = "shaders/LampShader.frag";
 const std::string diffPath = "resources/clothTile.jpg";
 const std::string specPath = "resources/clothSpecular.png";
 
-//const std::string modelPath = "resources/nanosuit/nanosuit.obj";
-
 const glm::vec3 cubePositions[] = {
 	glm::vec3( 0.0f,  0.0f,  0.0f),
 	glm::vec3( 2.0f,  5.0f, -15.0f),
@@ -103,8 +101,6 @@ private:
 	PointLight *lamps[4];
 	SpotLight *flashlight;
 	Material *material;
-	//Mesh *cubeMesh;
-	//Model *armor;
 
 	void init();
 	void mainLoop();

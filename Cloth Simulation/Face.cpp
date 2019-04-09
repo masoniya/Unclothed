@@ -16,8 +16,6 @@ float Face::getArea()
 	glm::vec3 cross = glm::cross(diff1, diff2);
 
 	return (float)cross.length();
-
-
 }
 
 void Face::init(PointMass* point1, PointMass* point2, PointMass * point3)
@@ -27,7 +25,6 @@ void Face::init(PointMass* point1, PointMass* point2, PointMass * point3)
 	this->point3 = point3;
 
 	calcNormal();
-
 }
 
 void Face::calcNormal()
@@ -37,7 +34,15 @@ void Face::calcNormal()
 
 	glm::vec3 cross = glm::cross(diff1, diff2);
 
-	this->normal = cross / (float)cross.length();
+	//this->normal = cross / (float)cross.length();
+	this->normal = glm::normalize(cross);
+}
+
+void Face::updatePointNormals()
+{
+	point1->addNormal(normal);
+	point2->addNormal(normal);
+	point3->addNormal(normal);
 }
 
 //(1 -> 2) X (1 -> 3)

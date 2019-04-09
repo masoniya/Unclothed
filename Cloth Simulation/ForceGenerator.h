@@ -7,9 +7,6 @@
 
 class ForceGenerator
 {
-
-
 public:
-
 	virtual void applyForce()=0;
 };

@@ -6,6 +6,7 @@
 
 extern float deltaTime;
 ResourceManager resourceManager;
+InputManager *activeInputManager;
 
 Engine::Engine() :
 	attribCount(0)
@@ -113,12 +114,13 @@ void Engine::init()
 	initShaderProgram();
 
 	inputManager = new InputManager(window->getWindow());
-	inputManager->registerKeyboardInput(window);
+	activeInputManager = inputManager;
+	activeInputManager->registerKeyboardInput(window);
 
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 6.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	inputManager->registerKeyboardInput(camera);
-	inputManager->registerMouseInput(camera);
-	inputManager->registerScrollInput(camera);
+	activeInputManager->registerKeyboardInput(camera);
+	activeInputManager->registerMouseInput(camera);
+	activeInputManager->registerScrollInput(camera);
 
 	this->physics = new PhysicsEngine(this);
 
@@ -140,7 +142,7 @@ void Engine::mainLoop()
 	while (!glfwWindowShouldClose(window->getWindow())) {
 		fpsCounter.update();
 
-		inputManager->handleKeyboardInput();
+		activeInputManager->handleKeyboardInput();
 		this->physics->updatePhyics(deltaTime);
 
 		renderFrame();
@@ -193,7 +195,7 @@ void Engine::initLights()
 	glm::vec3 white = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 1.0f);
 
-	sunlight = new DirectionalLight(0.05f * yellow, 0.7f * yellow, 0.5f * white, glm::vec3(-0.2f, -1.0f, 0.2f));
+	sunlight = new DirectionalLight(0.05f * yellow, 0.07f * yellow + 0.5f * white, 0.5f * white, glm::vec3(-0.2f, -1.0f, 0.2f));
 
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(0.7f,  0.2f,  2.0f),
@@ -218,7 +220,7 @@ void Engine::initLights()
 	flashlight = new SpotLight(0.1f * white, white, white, camera->getCameraPosition(), camera->getCameraFront(),
 		cos(glm::radians(12.5f)), cos(glm::radians(17.5f)), flashAttenuation);
 
-	inputManager->registerKeyboardInput(flashlight);
+	activeInputManager->registerKeyboardInput(flashlight);
 }
 
 void Engine::createVertexObjects()
