@@ -138,6 +138,9 @@ float * Cloth::getVertexData()
 {
 	int offset = 0;
 
+	float texCoordXStep = 1.0f / (width - 1);
+	float texCoordYStep = 1.0f / (height - 1);
+
 	if (useVertexNormals) {
 		for (Face *face : faces) {
 			face->calcNormal();
@@ -190,8 +193,11 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = bottomRight.getPosition().y;
 				vertexData[offset++] = bottomRight.getPosition().z;
 
-				vertexData[offset++] = bottomRight.getNormal().y;
+				//holy shit
+				//vertexData[offset++] = bottomRight.getNormal().y;
+				//vertexData[offset++] = bottomRight.getNormal().x;
 				vertexData[offset++] = bottomRight.getNormal().x;
+				vertexData[offset++] = bottomRight.getNormal().y;
 				vertexData[offset++] = bottomRight.getNormal().z;
 
 				vertexData[offset++] = 1.0f;
