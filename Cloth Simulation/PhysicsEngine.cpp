@@ -26,8 +26,8 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 
 
 	//initialize objects
-	width = 22;
-	height = 22;
+	width = 25;
+	height = 25;
 
 	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 1.0f);
 	activeInputManager->registerKeyboardInput(cloth);
@@ -84,5 +84,4 @@ void PhysicsEngine::updateRenderer()
 	Cloth* cloth = (Cloth*)physicalObjects[0];
 
 	this->renderer->updatecloth(cloth->getVertexData(), (width - 1)*(height - 1) * 8 * 6);
-
 }

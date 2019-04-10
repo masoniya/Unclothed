@@ -138,8 +138,11 @@ float * Cloth::getVertexData()
 {
 	int offset = 0;
 
-	float texCoordXStep = 1.0f / (width - 1);
-	float texCoordYStep = 1.0f / (height - 1);
+	bool calculateTexCoords = true;
+	float repeatTileCount = 1.5f;
+
+	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
+	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
 
 	if (useVertexNormals) {
 		for (Face *face : faces) {
@@ -173,9 +176,15 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = topLeft.getNormal().y;
 				vertexData[offset++] = topLeft.getNormal().z;
 
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
-
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 0.0f;
+					vertexData[offset++] = 1.0f;
+				}
+				else {
+					vertexData[offset++] = (j)* texCoordXStep;
+					vertexData[offset++] = 1 - (i)* texCoordYStep;
+				}
+				
 				//bottom left
 				vertexData[offset++] = bottomLeft.getPosition().x;
 				vertexData[offset++] = bottomLeft.getPosition().y;
@@ -185,24 +194,33 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = bottomLeft.getNormal().y;
 				vertexData[offset++] = bottomLeft.getNormal().z;
 
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 0.0f;
-
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 0.0f;
+					vertexData[offset++] = 0.0f;
+				}
+				else {
+					vertexData[offset++] = (j)* texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				
 				//bottom right
 				vertexData[offset++] = bottomRight.getPosition().x;
 				vertexData[offset++] = bottomRight.getPosition().y;
 				vertexData[offset++] = bottomRight.getPosition().z;
 
-				//holy shit
-				//vertexData[offset++] = bottomRight.getNormal().y;
-				//vertexData[offset++] = bottomRight.getNormal().x;
 				vertexData[offset++] = bottomRight.getNormal().x;
 				vertexData[offset++] = bottomRight.getNormal().y;
 				vertexData[offset++] = bottomRight.getNormal().z;
 
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 0.0f;
-
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 1.0f;
+					vertexData[offset++] = 0.0f;
+				}
+				else {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				
 				//top left
 				vertexData[offset++] = topLeft.getPosition().x;
 				vertexData[offset++] = topLeft.getPosition().y;
@@ -212,8 +230,15 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = topLeft.getNormal().y;
 				vertexData[offset++] = topLeft.getNormal().z;
 
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 0.0f;
+					vertexData[offset++] = 1.0f;
+				}
+				else {
+					vertexData[offset++] = (j)* texCoordXStep;
+					vertexData[offset++] = 1 - (i)* texCoordYStep;
+				}
+				
 
 				//bottom right
 				vertexData[offset++] = bottomRight.getPosition().x;
@@ -224,8 +249,15 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = bottomRight.getNormal().y;
 				vertexData[offset++] = bottomRight.getNormal().z;
 
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 0.0f;
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 1.0f;
+					vertexData[offset++] = 0.0f;
+				}
+				else {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				
 
 				//top right
 				vertexData[offset++] = topRight.getPosition().x;
@@ -236,8 +268,15 @@ float * Cloth::getVertexData()
 				vertexData[offset++] = topRight.getNormal().y;
 				vertexData[offset++] = topRight.getNormal().z;
 
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 1.0f;
+				if (!calculateTexCoords) {
+					vertexData[offset++] = 1.0f;
+					vertexData[offset++] = 1.0f;
+				}
+				else {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i)* texCoordYStep;
+				}
+				
 			}
 
 			//Old way that uses face normals
