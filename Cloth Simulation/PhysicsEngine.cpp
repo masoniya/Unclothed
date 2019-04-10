@@ -18,7 +18,7 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 
 	//initialize forces 
 	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
-	DragForce * drag = new DragForce(0.5f);
+	DragForce * drag = new DragForce(0.4f);
 
 	
 	this->externalForces.push_back(gravity);

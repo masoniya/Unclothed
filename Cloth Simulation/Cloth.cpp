@@ -139,7 +139,8 @@ float * Cloth::getVertexData()
 	int offset = 0;
 
 	bool calculateTexCoords = true;
-	float repeatTileCount = 1.5f;
+	bool weird = false;
+	float repeatTileCount = 2.0f;
 
 	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
 	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
@@ -181,8 +182,15 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 1.0f;
 				}
 				else {
-					vertexData[offset++] = (j)* texCoordXStep;
-					vertexData[offset++] = 1 - (i)* texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j)* texCoordXStep;
+						vertexData[offset++] = 1 - (i)* texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = topLeft.getPosition().x;
+						vertexData[offset++] = topLeft.getPosition().y;
+					}
+					
 				}
 				
 				//bottom left
@@ -199,8 +207,14 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 0.0f;
 				}
 				else {
-					vertexData[offset++] = (j)* texCoordXStep;
-					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j)* texCoordXStep;
+						vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = bottomLeft.getPosition().x;
+						vertexData[offset++] = bottomLeft.getPosition().y;
+					}
 				}
 				
 				//bottom right
@@ -217,8 +231,14 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 0.0f;
 				}
 				else {
-					vertexData[offset++] = (j + 1) * texCoordXStep;
-					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j + 1) * texCoordXStep;
+						vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = bottomRight.getPosition().x;
+						vertexData[offset++] = bottomRight.getPosition().y;
+					}
 				}
 				
 				//top left
@@ -235,8 +255,14 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 1.0f;
 				}
 				else {
-					vertexData[offset++] = (j)* texCoordXStep;
-					vertexData[offset++] = 1 - (i)* texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j)* texCoordXStep;
+						vertexData[offset++] = 1 - (i)* texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = topLeft.getPosition().x;
+						vertexData[offset++] = topLeft.getPosition().y;
+					}
 				}
 				
 
@@ -254,8 +280,14 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 0.0f;
 				}
 				else {
-					vertexData[offset++] = (j + 1) * texCoordXStep;
-					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j + 1) * texCoordXStep;
+						vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = bottomRight.getPosition().x;
+						vertexData[offset++] = bottomRight.getPosition().y;
+					}
 				}
 				
 
@@ -273,8 +305,14 @@ float * Cloth::getVertexData()
 					vertexData[offset++] = 1.0f;
 				}
 				else {
-					vertexData[offset++] = (j + 1) * texCoordXStep;
-					vertexData[offset++] = 1 - (i)* texCoordYStep;
+					if (!weird) {
+						vertexData[offset++] = (j + 1) * texCoordXStep;
+						vertexData[offset++] = 1 - (i)* texCoordYStep;
+					}
+					else {
+						vertexData[offset++] = topRight.getPosition().x;
+						vertexData[offset++] = topRight.getPosition().y;
+					}
 				}
 				
 			}
