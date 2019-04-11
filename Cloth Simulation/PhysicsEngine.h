@@ -12,6 +12,8 @@ public:
 	PhysicsEngine(Render* renderer);
 	void updatePhyics(float deltaTime);
 
+	void addPhysicalObject(DeformableBody* physicalObject);
+	void addExternalForce(ForceGenerator* externalForce);
 
 private:	
 	std::vector<DeformableBody*> physicalObjects;

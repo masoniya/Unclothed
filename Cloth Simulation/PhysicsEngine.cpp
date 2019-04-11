@@ -1,10 +1,7 @@
-#include <glfw/glfw3.h>
-
 #include "PhysicsEngine.h"
 #include "Cloth.h"
 #include "GravitationalForce.h"
 #include "DragForce.h"
-#include "InputManager.h"
 
 
 PhysicsEngine::PhysicsEngine(Render* renderer)
@@ -17,11 +14,9 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	//initialize forces 
 	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
 	DragForce * drag = new DragForce(0.4f);
-
 	
 	this->externalForces.push_back(gravity);
 	this->externalForces.push_back(drag);
-
 
 	//initialize objects
 	width = 25;
@@ -33,52 +28,47 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	gravity->addPhysicalObject(cloth);
 	drag->addPhysicalObject(cloth);
 	
-	int size = (width-1)*(height-1)  * 8 * 6;
+	int size = (width - 1) * (height - 1) * 8 * 6;
 	this->renderer->initcloth(cloth->getVertexData(), size);
 	
 }
 
 void PhysicsEngine::updatePhyics(float deltaTime)
 {
-	static int iterations = 0;
-	static float fuckYouTimeAccumulator;
-	
-
 	this->timeAccumulator += deltaTime;
 
 	while (timeAccumulator >= timeStep) {
-		iterations++;
-
-		//apply the external forces
+		
+		//apply the external forces (~ 0.2ms)
 		for (ForceGenerator* forceGenerator : externalForces) {
 			forceGenerator->applyForce();
 		}
 
-		//call update method on each body which calculates the internal forces and then integrates
+		//call update method on each body which calculates the internal forces and then integrates (~ 4.5ms)
 		for (DeformableBody* object : physicalObjects) {
 			object->update(timeStep);
-			
 		}
 
-		fuckYouTimeAccumulator += timeStep;
 		timeAccumulator -= timeStep;
-
-
 	}
-
-	static bool printed = false;
-	if (!printed && glfwGetTime() > 5.0f) {
-		//std::cout << "iterations : " << iterations << " , Time elapsed : " << fuckYouTimeAccumulator << std::endl;
-		printed = true;
-	}
-
+	//(~ 2ms)
 	this->updateRenderer();
 
+}
+
+void PhysicsEngine::addPhysicalObject(DeformableBody * physicalObject)
+{
+	physicalObjects.push_back(physicalObject);
+}
+
+void PhysicsEngine::addExternalForce(ForceGenerator * externalForce)
+{
+	externalForces.push_back(externalForce);
 }
 
 void PhysicsEngine::updateRenderer()
 {
 	Cloth* cloth = (Cloth*)physicalObjects[0];
 
-	this->renderer->updatecloth(cloth->getVertexData(), (width - 1)*(height - 1) * 8 * 6);
+	this->renderer->updatecloth(cloth->getVertexData(), (width - 1) * (height - 1) * 8 * 6);
 }

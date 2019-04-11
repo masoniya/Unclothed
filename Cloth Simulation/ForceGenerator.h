@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include <vector>
 
@@ -8,5 +8,5 @@
 class ForceGenerator
 {
 public:
-	virtual void applyForce()=0;
+	virtual void applyForce() = 0;
 };

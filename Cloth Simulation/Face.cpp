@@ -4,7 +4,6 @@
 Face::Face(PointMass* point1, PointMass* point2, PointMass * point3)
 {
 	init(point1, point2, point3);
-
 }
 
 
@@ -52,6 +51,5 @@ glm::vec3 Face::calcNormal(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 
 	glm::vec3 cross = glm::cross(diff1, diff2);
 
-	//return cross / glm::length(cross);
-	return glm::normalize(cross);
+	return cross / (float)cross.length();
 }

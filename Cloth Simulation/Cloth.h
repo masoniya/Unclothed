@@ -18,9 +18,10 @@ const float damp = 0.1f;
 class Cloth : public DeformableBody
 {
 public:
-	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass);
+	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass);
 	
-	void init(glm::vec3 top_left,int num_cols , int num_rows, float width, float height, float mass);
+	void init(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass);
+
 	void update(float deltaTime);
 
 	float* getVertexData();

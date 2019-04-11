@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "PointMass.h"
   
 
@@ -9,7 +7,7 @@ class Spring
 {
 public:
 	Spring();
-	Spring(float, float, PointMass *, PointMass *);
+	Spring(float k, float d, PointMass* particle1, PointMass* particle2);
 	
 	float getRestLength();
 	float getCurrentLength();
@@ -24,5 +22,5 @@ private:
 	PointMass *pointMass1;
 	PointMass *pointMass2;
 
-	void init(float, float,  PointMass*, PointMass*);
+	void init(float k, float d,  PointMass* particle1, PointMass* particle2);
 };

@@ -22,6 +22,7 @@
 #include "ResourceManager.h"
 #include "Render.h"
 #include "PhysicsEngine.h"
+#include "Cloth.h"
 
 
 const int WIDTH = 1366;
@@ -83,7 +84,6 @@ public:
 private:
 	float* vertices;
 	int size;
-	PhysicsEngine* physics;
 	uint32_t indices[36];
 	uint32_t vbo;
 	uint32_t vao;
@@ -101,6 +101,9 @@ private:
 	PointLight *lamps[4];
 	SpotLight *flashlight;
 	Material *material;
+
+	PhysicsEngine* physics;
+	Cloth* cloth;
 
 	void init();
 	void mainLoop();

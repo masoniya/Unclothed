@@ -1,7 +1,6 @@
 #pragma once
 
-#include "glm/glm.hpp"
-#include <vector>
+#include <glm/glm.hpp>
 
 #include "ForceGenerator.h"
 #include "Gravity.h"
@@ -20,5 +19,4 @@ private:
 
 	glm::vec3 gravityAcceleration;
 	std::vector<Gravity*> physicalObjects;
-
 };

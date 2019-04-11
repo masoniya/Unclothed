@@ -86,19 +86,16 @@ Engine::Engine() :
 
 		4, 5, 6,	//back face
 		6, 7, 4,
-	}
-	
+	}	
 {
-
 }
 
 void Engine::initcloth(float * vertexdata,int size)
 {
 	this->vertices = vertexdata;
 	this->size = size;
-
-	
 }
+
 void Engine::updatecloth(float* vertexdata,int size)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -143,8 +140,10 @@ void Engine::mainLoop()
 		fpsCounter.update();
 
 		activeInputManager->handleKeyboardInput();
+
 		this->physics->updatePhyics(deltaTime);
 
+		//(~ 1.4ms)
 		renderFrame();
 
 		glfwPollEvents();
@@ -315,7 +314,7 @@ void Engine::renderFrame()
 		model = glm::translate(model, cubePositions[i]);
 		program.setUniformMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, this->size/8);
+		glDrawArrays(GL_TRIANGLES, 0, this->size / 8);
 	}
 
 	lampProgram.useProgram();

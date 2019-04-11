@@ -6,13 +6,13 @@
 
 extern float deltaTime;
 
-Cloth::Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass)
+Cloth::Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass)
 {
-	init(top_left, num_cols, num_rows, width, height,mass);
+	init(top_left, num_cols, num_rows, width, height, mass);
 }
 
 
-void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,float height,float mass)
+void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass)
 {
 	//initialize the particles array
 	this->width = num_cols;
@@ -126,11 +126,12 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 
 void Cloth::update(float deltaTime)
 {
-	//apply internal forces
+	//apply internal forces (~ 4ms)
 	for (Spring* spring : allSprings) {
 		spring->applyForce();
-
 	}
+
+	//(~ 0.3ms)
 	solver->solve(deltaTime);
 }
 

@@ -19,5 +19,5 @@ public:
 private:
 	PointMass *point1, *point2, *point3;
 
-	void init(PointMass* ,PointMass* , PointMass*);
+	void init(PointMass* point1, PointMass* point2, PointMass* point3);
 };
