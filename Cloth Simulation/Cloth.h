@@ -15,7 +15,7 @@ const float k_const_bending = 600.0f;
 
 const float damp = 0.1f;
 
-class Cloth : public DeformableBody, public KeyboardControl
+class Cloth : public DeformableBody
 {
 public:
 	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass);
@@ -27,8 +27,6 @@ public:
 
 	int width, height;
 
-	void manageKeyboardInput(GLFWwindow *window) override;
-
 private:
 
 	std::vector<Spring*> allSprings;
@@ -36,8 +34,4 @@ private:
 	float* vertexData;
 
 	float mass;
-
-	bool buttonDown;
-	bool useVertexNormals;
-
 };

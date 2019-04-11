@@ -7,8 +7,6 @@
 #include "InputManager.h"
 
 
-extern InputManager *activeInputManager;
-
 PhysicsEngine::PhysicsEngine(Render* renderer)
 {
 	this->renderer = renderer;
@@ -30,7 +28,6 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	height = 25;
 
 	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 1.0f);
-	activeInputManager->registerKeyboardInput(cloth);
 
 	this->physicalObjects.push_back(cloth);
 	gravity->addPhysicalObject(cloth);

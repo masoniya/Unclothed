@@ -149,9 +149,6 @@
     <ClInclude Include="PointMass.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Spring.h">
-      <Filter>Header Files\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="DeformableBody.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
