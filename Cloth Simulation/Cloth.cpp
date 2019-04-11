@@ -146,21 +146,26 @@ float * Cloth::getVertexData()
 	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
 
 
-	//calculate face normals (~ 3.6ms)
+	//calculate face normals (~ 1.2ms)
+	//double beforeNormal = glfwGetTime();
 	for (Face *face : faces) {
+		//(~ 0.8ms)
 		face->calcNormal();
+		//(~ 0.8ms)
 		face->updatePointNormals();
 	}
+
+	//double afterNormal = glfwGetTime();
 	//calculate point normals (~ 0.8ms)
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			allPoints[i][j].calculatePointNormal();
 		}
 	}
+	//double afterAverage = glfwGetTime();
 
-
-	static bool printed = false;
-	double start = glfwGetTime();
+	//double start = glfwGetTime();
+	//(! 0.2ms)
 	for (int i = 0; i < height - 1; i++) {
 		for (int j = 0; j < width - 1; j++) {
 
@@ -322,13 +327,15 @@ float * Cloth::getVertexData()
 		}
 	}
 
-	double end = glfwGetTime();
-	static double secondCounter = 0.0;
+	//double end = glfwGetTime();
+	/*static double secondCounter = 0.0;
 	secondCounter += deltaTime;
 	if (secondCounter > 1.0) {
 		secondCounter -= 1.0;
+		std::cout << "Normal Calculation Time : " << (afterNormal - beforeNormal) * 1000 << std::endl;
+		std::cout << "Normal Averaging Time : " << (afterAverage - afterNormal) * 1000 << std::endl;
 		std::cout << "Vertex Data Time : " << (end - start) * 1000 << std::endl;
-	}
+	}*/
 	
 	return vertexData;
 

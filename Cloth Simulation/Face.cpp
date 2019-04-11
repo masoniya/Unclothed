@@ -34,8 +34,7 @@ void Face::calcNormal()
 
 	glm::vec3 cross = glm::cross(diff1, diff2);
 
-	//this->normal = cross / (float)cross.length();
-	this->normal = glm::normalize(cross);
+	this->normal = cross / (float)cross.length();
 }
 
 void Face::updatePointNormals()

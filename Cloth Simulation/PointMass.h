@@ -37,7 +37,9 @@ private:
 	glm::vec3 velocity;
 	glm::vec3 forceAccum;
 	glm::vec3 pointNormal;
-	std::vector<glm::vec3> normalAccum;
+
+	glm::vec3 normalAccum;
+	unsigned int normalCount;
 
 	bool immovable;
 
