@@ -152,6 +152,7 @@
     <ClCompile Include="PointMass.cpp" />
     <ClCompile Include="SemiImpEuler.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="ToString.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Spring.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="SemiImpEuler.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="ScrollControl.h" />
     <ClInclude Include="ShaderProgram.h" />

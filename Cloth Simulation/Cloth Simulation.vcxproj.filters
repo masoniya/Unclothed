@@ -117,6 +117,9 @@
     <ClCompile Include="DragForce.cpp">
       <Filter>Source Files\Physics\External forces</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="Spring.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

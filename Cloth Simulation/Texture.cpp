@@ -83,15 +83,15 @@ void Texture::construct(std::string texturePath, TextureType type, int minFilter
 		format = GL_RGBA;
 	}
 	else {
-		throw std::runtime_error("Unknown color format");
+		throw std::runtime_error("Unknown color format for texture : " + texturePath + "\n");
 	}
 
 	if (data != nullptr) {
-		glTexImage2D(GL_TEXTURE_2D, 0, format , width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {			
-		throw std::runtime_error("Failed to load texture");
+		throw std::runtime_error("Failed to load texture : " + texturePath + "\n");
 	}
 
 	stbi_image_free(data);

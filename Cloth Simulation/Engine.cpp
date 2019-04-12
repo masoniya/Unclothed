@@ -58,11 +58,23 @@ void Engine::init()
 
 	initLights();
 
+	skybox = new SkyBox(skyboxFaces);
+	skybox->initDefaultMesh();
+
+	//depth testing
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	
+	//multisample antialiasing
 	glEnable(GL_MULTISAMPLE);
+
+	//face culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK); //default is back
 	glFrontFace(GL_CCW); //default is ccw
+	
+	//seamless cubemap
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void Engine::mainLoop()
@@ -101,7 +113,10 @@ void Engine::initWindow()
 void Engine::initShaderProgram()
 {
 	program.compileShaders(vertexShaderPath, geometryShaderPath, fragmentShaderPath);
+
 	lampProgram.compileShaders(lampVertShaderPath, lampFragShaderPath);
+
+	skyboxProgram.compileShaders(skyboxVertShaderPath.c_str() , skyboxFragShaderPath.c_str());
 }
 
 void Engine::initLights()
@@ -125,7 +140,7 @@ void Engine::initLights()
 	glm::vec3 white = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 blue = glm::vec3(0.0f, 0.0f, 1.0f);
 
-	sunlight = new DirectionalLight(0.05f * yellow, 0.07f * yellow + 0.5f * white, 0.5f * white, glm::vec3(-0.2f, -1.0f, 0.2f));
+	sunlight = new DirectionalLight(0.05f * yellow, 0.35f * yellow + 1.0f * white, 0.5f * white, glm::vec3(0.0f, -0.34f, -0.5f));
 
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(0.7f,  0.2f,  2.0f),
@@ -264,8 +279,14 @@ void Engine::renderFrame()
 		lampProgram.setUniformVec3("lightColor", lamps[i]->diffuseColor);
 
 		lamps[i]->draw(lampProgram);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
+
+	skyboxProgram.useProgram();
+
+	skyboxProgram.setUniformMat4("view", view);
+	skyboxProgram.setUniformMat4("projection", projection);
+
+	skybox->draw(skyboxProgram);
 
 	window->swapBuffers();
 }
