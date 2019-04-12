@@ -4,23 +4,28 @@
 #include "DragForce.h"
 
 
-PhysicsEngine::PhysicsEngine(Render* renderer)
+PhysicsEngine::PhysicsEngine() :
+	timeStep(1.0f / 60.0f),
+	timeAccumulator(0.0f)
+{
+}
+
+PhysicsEngine::PhysicsEngine(Render* renderer) :
+	timeStep(1.0f / 60.0f),
+	timeAccumulator(0.0f)
 {
 	this->renderer = renderer;
 
-	timeStep = 1.0f / 60.0f;
-	timeAccumulator = 0.0f;
-
 	//initialize forces 
 	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
-	DragForce * drag = new DragForce(0.4f);
+	DragForce* drag = new DragForce(0.4f);
 	
 	this->externalForces.push_back(gravity);
 	this->externalForces.push_back(drag);
 
 	//initialize objects
-	width = 25;
-	height = 25;
+	int width = 25;
+	int height = 25;
 
 	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 1.0f);
 
@@ -28,9 +33,12 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 	gravity->addPhysicalObject(cloth);
 	drag->addPhysicalObject(cloth);
 	
-	int size = (width - 1) * (height - 1) * 8 * 6;
-	this->renderer->initcloth(cloth->getVertexData(), size);
-	
+	size = (width - 1) * (height - 1) * 8 * 6;
+	sizeVertices = width * height * 8;
+	sizeIndices = (width - 1) * (height - 1) * 6;
+
+	//this->renderer->initCloth(cloth->getVertexData(), size);
+	this->renderer->initClothIndexed(cloth->getVertexDataIndexed(), sizeVertices, cloth->getIndexData(), sizeIndices);
 }
 
 void PhysicsEngine::updatePhyics(float deltaTime)
@@ -70,5 +78,6 @@ void PhysicsEngine::updateRenderer()
 {
 	Cloth* cloth = (Cloth*)physicalObjects[0];
 
-	this->renderer->updatecloth(cloth->getVertexData(), (width - 1) * (height - 1) * 8 * 6);
+	//this->renderer->updateCloth(cloth->getVertexData(), size);
+	this->renderer->updateCloth(cloth->getVertexDataIndexed(), sizeVertices);
 }

@@ -26,6 +26,9 @@ public:
 
 	float* getVertexData();
 
+	float* getVertexDataIndexed();
+	int* getIndexData();
+
 	int width, height;
 
 private:
@@ -33,6 +36,9 @@ private:
 	std::vector<Spring*> allSprings;
 	PointMass **allPoints;
 	float* vertexData;
+
+	float* vertexDataIndexed;
+	int* indexData;
 
 	float mass;
 };

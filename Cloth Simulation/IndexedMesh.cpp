@@ -1,6 +1,10 @@
 #include "IndexedMesh.h"
 
 
+IndexedMesh::IndexedMesh()
+{
+}
+
 IndexedMesh::IndexedMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
 	this->vertices = vertices;

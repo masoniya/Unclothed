@@ -9,6 +9,7 @@
 class PhysicsEngine
 {
 public:
+	PhysicsEngine();
 	PhysicsEngine(Render* renderer);
 	void updatePhyics(float deltaTime);
 
@@ -26,7 +27,10 @@ private:
 
 	void updateRenderer();
 
-	int width;
-	int height;
+	//int width;
+	//int height;
 
+	int size;
+	int sizeVertices;
+	int sizeIndices;
 };

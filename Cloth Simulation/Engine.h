@@ -22,7 +22,6 @@
 #include "ResourceManager.h"
 #include "Render.h"
 #include "PhysicsEngine.h"
-#include "Cloth.h"
 
 
 const int WIDTH = 1366;
@@ -78,13 +77,16 @@ public:
 	Engine();
 
 	void start();
-	void initcloth(float * vertexdata,int size);
-	void updatecloth(float * vertexdata,int size);
+
+	void initCloth(float * vertexdata,int size) override;
+	void initClothIndexed(float *vertexData, int vertexDataSize, int *indexData, int indexDataSize) override;
+	void updateCloth(float * vertexdata,int size) override;
 
 private:
 	float* vertices;
 	int size;
-	uint32_t indices[36];
+	int* indices;
+	int indicesSize;
 	uint32_t vbo;
 	uint32_t vao;
 	uint32_t ebo;
@@ -103,7 +105,6 @@ private:
 	Material *material;
 
 	PhysicsEngine* physics;
-	Cloth* cloth;
 
 	void init();
 	void mainLoop();

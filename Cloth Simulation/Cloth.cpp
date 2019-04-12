@@ -22,6 +22,9 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 	int size = (num_cols - 1) * (num_rows - 1) * 8 * 6;
 	this->vertexData = new float[size];
 
+	this->vertexDataIndexed = new float[num_rows * num_cols * 8];
+	this->indexData = new int[(num_cols - 1) * (num_rows - 1) * 6];
+
 	allPoints = new PointMass*[num_rows];
 
 	for (int i = 0; i < num_rows; i++) {
@@ -340,4 +343,87 @@ float * Cloth::getVertexData()
 	
 	return vertexData;
 
+}
+
+float * Cloth::getVertexDataIndexed()
+{
+	int offset = 0;
+
+	bool calculateTexCoords = true;
+	bool weird = false;
+	float repeatTileCount = 2.0f;
+
+	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
+	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
+
+	for (Face *face : faces) {
+		face->calcNormal();
+		face->updatePointNormals();
+	}
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			allPoints[i][j].calculatePointNormal();
+		}
+	}
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+
+			glm::vec3 position = allPoints[i][j].getPosition();
+			glm::vec3 normal = allPoints[i][j].getNormal();
+
+			//top left
+			vertexDataIndexed[offset++] = position.x;
+			vertexDataIndexed[offset++] = position.y;
+			vertexDataIndexed[offset++] = position.z;
+
+			vertexDataIndexed[offset++] = normal.x;
+			vertexDataIndexed[offset++] = normal.y;
+			vertexDataIndexed[offset++] = normal.z;
+
+			if (!calculateTexCoords) {
+				vertexDataIndexed[offset++] = 0.0f;
+				vertexDataIndexed[offset++] = 1.0f;
+			}
+			else {
+				if (!weird) {
+					vertexDataIndexed[offset++] = (j) * texCoordXStep;
+					vertexDataIndexed[offset++] = 1 - (i) * texCoordYStep;
+				}
+				else {
+					vertexDataIndexed[offset++] = position.x;
+					vertexDataIndexed[offset++] = position.y;
+				}
+			}
+
+		}
+	}
+
+	return vertexDataIndexed;
+}
+
+int * Cloth::getIndexData()
+{
+	int offset = 0;
+
+	for (int i = 0; i < height - 1; i++) {
+		for (int j = 0; j < width - 1; j++) {
+			
+			int topLeftIndex = i * width + j;
+			int bottomLeftIndex = (i + 1) * width + j;
+			int bottomRightIndex = (i + 1) * width + (j + 1);
+			int topRightIndex = i * width + (j + 1);
+
+			indexData[offset++] = topLeftIndex;
+			indexData[offset++] = bottomLeftIndex;
+			indexData[offset++] = bottomRightIndex;
+			indexData[offset++] = topLeftIndex;
+			indexData[offset++] = bottomRightIndex;
+			indexData[offset++] = topRightIndex;
+
+		}
+	}
+
+	return indexData;
 }

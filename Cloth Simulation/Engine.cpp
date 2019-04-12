@@ -9,97 +9,28 @@ ResourceManager resourceManager;
 InputManager *activeInputManager;
 
 Engine::Engine() :
-	attribCount(0)
-	/*, vertices{
-
-	-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-	-0.5f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-	0.0f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-	0.0f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-	0.0f, -0.0f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f
-
-
-
-
-}*/
-
-
-/*	vertices{
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-	}*/,
-	indices{
-		0, 1, 2,	//front face
-		2, 3, 0,
-
-		1, 5, 6,	//right face
-		6, 2, 1,
-
-		3, 2, 6,	//bottom face
-		6, 7, 3,
-
-		4, 0, 3,	//left face
-		3, 7, 4,
-
-		4, 5, 1,	//top face
-		1, 0, 4,
-
-		4, 5, 6,	//back face
-		6, 7, 4,
-	}	
+	attribCount(0)	
 {
 }
 
-void Engine::initcloth(float * vertexdata,int size)
+void Engine::initCloth(float * vertexdata, int size)
 {
 	this->vertices = vertexdata;
 	this->size = size;
 }
 
-void Engine::updatecloth(float* vertexdata,int size)
+void Engine::initClothIndexed(float * vertexData, int vertexDataSize, int * indexData, int indexDataSize)
+{
+	vertices = vertexData;
+	size = vertexDataSize;
+	indices = indexData;
+	indicesSize = indexDataSize;
+}
+
+void Engine::updateCloth(float* vertexdata, int size)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0,size*sizeof(float) , vertexdata);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size * sizeof(float), vertexdata);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -226,7 +157,7 @@ void Engine::createVertexObjects()
 {
 	glGenBuffers(1, &vbo);
 	glGenVertexArrays(1, &vao);
-	//glGenBuffers(1, &ebo);
+	glGenBuffers(1, &ebo);
 
 	//bind the vao
 	glBindVertexArray(vao);
@@ -236,8 +167,8 @@ void Engine::createVertexObjects()
 	glBufferData(GL_ARRAY_BUFFER, this->size * sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
 	////bind the ebo
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indicesSize * sizeof(int), indices, GL_STATIC_DRAW);
 
 	//Specify attributes of vertices in the buffer
 	glVertexAttribPointer(attribCount++, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -314,7 +245,8 @@ void Engine::renderFrame()
 		model = glm::translate(model, cubePositions[i]);
 		program.setUniformMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, this->size / 8);
+		//glDrawArrays(GL_TRIANGLES, 0, this->size / 8);
+		glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
 	}
 
 	lampProgram.useProgram();
