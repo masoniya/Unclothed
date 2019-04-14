@@ -1,17 +1,20 @@
 #pragma once
 
 #include <vector>
+#include <set>
 
 #include "DeformableBody.h"
 #include "Spring.h"
 #include "PointMass.h"
 #include "Face.h"
 #include "KeyboardControl.h"
+#include "SpringPointMass.h"
 
 
-const float k_const_structure = 600.0f;
-const float k_const_shear = 600.0f;
-const float k_const_bending = 600.0f;
+
+const float k_const_structure = 300.0f;
+const float k_const_shear = 300.0f;
+const float k_const_bending = 300.0f;
 
 const float damp = 0.1f;
 
@@ -32,12 +35,16 @@ public:
 private:
 
 	std::vector<Spring*> allSprings;
-	PointMass **allPoints;
-	float* vertexData;
+	SpringPointMass **allPoints;
+	std::vector<Spring*> adjustableSprings;
+	set<SpringPointMass*> fixedPoints;
 
+	float* vertexData;
 	float mass;
 
 	bool buttonDown;
 	bool useVertexNormals;
+
+	void buildOrderedSprings();
 
 };

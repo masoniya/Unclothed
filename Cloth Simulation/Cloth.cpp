@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 
 #include "Cloth.h"
 #include "SemiImpEuler.h"
@@ -20,12 +21,13 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	int size = (num_cols - 1) * (num_rows - 1) * 8 * 6;
 	this->vertexData = new float[size];
 
-	allPoints = new PointMass*[num_rows];
+	allPoints = new SpringPointMass*[num_rows];
 
 	for (int i = 0; i < num_rows; i++) {
-		allPoints[i] = new PointMass[num_cols];
+		allPoints[i] = new SpringPointMass[num_cols];
 	}
 
+	int id = 0;
 	//initialize positions for particles
 	for (int i = 0; i < num_rows; i++) {
 		for (int j = 0; j < num_cols; j++) {
@@ -35,61 +37,98 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 			float newZ = top_left.z + ((float)i / num_rows) * height;
 
 			allPoints[i][j].setPosition(glm::vec3(newX , newY, newZ));
-			allPoints[i][j].setMass(mass / width * height);
+			allPoints[i][j].setMass(mass/  (width * height));
+			allPoints[i][j].setIdentifier(id);
 
 			if  (i == 0 && j == 0) {
 				allPoints[i][j].setImmovable();
+				fixedPoints.insert(&allPoints[i][j]);
 			}
 			if (i == 0 && j == num_cols - 1) {
 				allPoints[i][j].setImmovable();
+				fixedPoints.insert(&allPoints[i][j]);
 			}
 
 			/*if (i == num_rows-1 && j == 0) {
 				allPoints[i][j].setImmovable();
-			}
-			if (i == num_rows-1 && j == num_cols - 1) {
-				allPoints[i][j].setImmovable();
 			}*/
-
+			/*if (i == num_rows-1 && j == num_cols - 1) {
+				allPoints[i][j].setImmovable();
+			}
+*/
 			/*if (i == 0) {
 				allPoints[i][j].setImmovable();
 
 			}*/
 
 			points.push_back(&allPoints[i][j]);
+			id++;
 
 		}
 	}
 	
+	float maxDeformRrate = 40.0f;
 	// add springs
 	for (int i = 0; i < num_rows; i++) {
 		for (int j = 0; j < num_cols; j++) {
 
+			Spring* spring;
+			SpringPointMass* point1;
+			SpringPointMass* point2;
+
 			// structural springs
 			if (j + 1 < num_cols) {
-				allSprings.push_back(new Spring(k_const_structure, damp, &allPoints[i][j], &allPoints[i][j + 1]));
+				point1 = &allPoints[i][j];
+				point2 = &allPoints[i][j + 1];
+				spring = new Spring(k_const_structure, damp, point1, point2, maxDeformRrate);
+
+				point1->addHorizentalSpring(spring, point2);
+				point2->addHorizentalSpring(spring, point1);
+
+				allSprings.push_back(spring);
 			}
 			if (i + 1 < num_rows) {
-				allSprings.push_back(new Spring(k_const_structure, damp, &allPoints[i][j], &allPoints[i + 1][j]));
+				point1 = &allPoints[i][j];
+				point2 = &allPoints[i + 1][j];
+				spring = new Spring(k_const_structure, damp, point1, point2, maxDeformRrate);
+
+				point1->addVerticalSpring(spring, point2);
+				point2->addVerticalSpring(spring, point1);
+
+				allSprings.push_back(spring);
 			}
 
 			//shear springs
 			if (i + 1 < num_rows ) {
 				if (j + 1 < num_cols) {
-					allSprings.push_back(new Spring(k_const_shear, damp, &allPoints[i][j], &allPoints[i + 1][j + 1]));
+					point1 = &allPoints[i][j];
+					point2 = &allPoints[i + 1][j + 1];
+					spring = new Spring(k_const_shear, damp, point1, point2, maxDeformRrate);
+
+					point1->addShearSpring(spring, point2);
+					point2->addShearSpring(spring, point1);
+
+					allSprings.push_back(spring);
 				}
 
 				if (j - 1 >= 0) {
-					allSprings.push_back(new Spring(k_const_shear, damp, &allPoints[i][j], &allPoints[i + 1][j - 1]));
+					point1 = &allPoints[i][j];
+					point2 = &allPoints[i + 1][j - 1];
+					spring = new Spring(k_const_shear, damp, point1, point2, maxDeformRrate);
+
+					point1->addShearSpring(spring, point2);
+					point2->addShearSpring(spring, point1);
+
+					allSprings.push_back(spring);
 				}
 			}
 
 			//bending springs
 			if (j + 2 < num_cols) {
-				allSprings.push_back(new Spring(k_const_bending, damp, &allPoints[i][j], &allPoints[i][j + 2]));
+				allSprings.push_back(new Spring(k_const_bending, damp, &allPoints[i][j], &allPoints[i][j + 2],10.0f));
 			}
 			if (i + 2 < num_rows) {
-				allSprings.push_back(new Spring(k_const_bending, damp, &allPoints[i][j], &allPoints[i + 2][j]));
+				allSprings.push_back(new Spring(k_const_bending, damp, &allPoints[i][j], &allPoints[i + 2][j],10.0f));
 			}
 
 		}
@@ -110,6 +149,8 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 
 	solver = new SemiImpEuler(points);
 
+	buildOrderedSprings();
+
 	/*for (int i = 0; i < num_rows ; i++) {
 
 		for (int j = 0; j < num_cols ; j++) {
@@ -122,6 +163,7 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 
 	buttonDown = false;
 	useVertexNormals = true;
+
 }
 
 void Cloth::update(float deltaTime)
@@ -132,7 +174,115 @@ void Cloth::update(float deltaTime)
 
 	}
 	solver->solve(deltaTime);
+
+	for (Spring* spring : adjustableSprings) {
+		spring->adjust();
+	}
 }
+/* will be called currently in constructor because the fixed points are static
+
+	later will be called each frame when fixed points change with time*/
+
+void Cloth::buildOrderedSprings()
+{
+	//queues
+	queue<SpringPointMass*> q;
+	vector<SpringPointMass*> temp_q;
+
+	//pair variables
+	Spring* spring;
+	SpringPointMass* point;
+
+	//push fixed points
+	for (SpringPointMass* fixed : fixedPoints) {
+		q.push(fixed);
+	}
+
+
+	while (!q.empty()) {
+
+		//move elements to temp_q
+		while (!q.empty()) {
+			temp_q.push_back(q.front());
+			q.pop();
+
+		}
+
+		//three passes
+		for (SpringPointMass* vs : temp_q) {
+
+			SpringPointList horiz = vs->getHorizentalSprings();
+
+			for (pair<Spring*, SpringPointMass*> pair : horiz) {
+
+				spring = pair.first;
+				point = pair.second;
+
+				if (point->canExpand()) {
+
+					point->increment();
+					q.push(point);
+					spring->setMasterPoint(vs);
+					adjustableSprings.push_back(spring);
+
+				}
+
+			}
+
+		}
+		for (SpringPointMass* vs : temp_q) {
+
+			SpringPointList verti = vs->getVerticalSprings();
+
+			for (pair<Spring*, SpringPointMass*> pair : verti) {
+
+				spring = pair.first;
+				point = pair.second;
+
+				if (point->canExpand()) {
+
+					point->increment();
+					q.push(point);
+					spring->setMasterPoint(vs);
+					adjustableSprings.push_back(spring);
+
+				}
+
+			}
+
+		}
+		for (SpringPointMass* vs : temp_q) {
+
+			SpringPointList shear = vs->getShearSprings();
+
+			for (pair<Spring*, SpringPointMass*> pair : shear) {
+
+				spring = pair.first;
+				point = pair.second;
+
+				if (point->canExpand()) {
+
+					point->increment();
+					q.push(point);
+					spring->setMasterPoint(vs);
+					adjustableSprings.push_back(spring);
+
+				}
+
+			}
+
+		}
+
+		//clear the temp_q
+		temp_q.clear();
+
+
+	}
+
+
+
+}
+
 
 float * Cloth::getVertexData()
 {
@@ -141,11 +291,19 @@ float * Cloth::getVertexData()
 	float texCoordXStep = 1.0f / (width - 1);
 	float texCoordYStep = 1.0f / (height - 1);
 
+	
+	
+	
 	if (useVertexNormals) {
 		for (Face *face : faces) {
+			
 			face->calcNormal();
+			
 			face->updatePointNormals();
+			
 		}
+	
+	
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
@@ -153,6 +311,8 @@ float * Cloth::getVertexData()
 			}
 		}
 	}
+
+	
 
 	for (int i = 0; i < height - 1; i++) {
 
@@ -345,3 +505,6 @@ void Cloth::manageKeyboardInput(GLFWwindow * window)
 		buttonDown = false;
 	}
 }
+
+
+

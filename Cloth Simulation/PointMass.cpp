@@ -70,6 +70,11 @@ void PointMass::setImmovable()
 	immovable = true;
 }
 
+void PointMass::setIdentifier(int id)
+{
+	this->identfier = id;
+}
+
 //add a face normal to the normal accumulator
 void PointMass::addNormal(glm::vec3 normal)
 {
@@ -100,4 +105,11 @@ void PointMass::clearAccum()
 void PointMass::printPos()
 {
 	std::cout << position.x << " " << position.y << "\n";
+}
+
+bool PointMass::operator==(const PointMass & other)
+{
+
+	return this->identfier == other.identfier;
+
 }

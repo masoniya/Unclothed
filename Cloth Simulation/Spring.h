@@ -3,26 +3,32 @@
 #include <vector>
 
 #include "PointMass.h"
+
   
 
 class Spring
 {
 public:
 	Spring();
-	Spring(float, float, PointMass *, PointMass *);
+	Spring(float, float, PointMass *, PointMass *,float);
 	
 	float getRestLength();
 	float getCurrentLength();
 	
+	void setMasterPoint(PointMass* master);
+
 	void applyForce();
+	void adjust();
 	
 private:
 
 	float springConst;
 	float dampingConst;
 	float restLength;
-	PointMass *pointMass1;
-	PointMass *pointMass2;
+	PointMass** pointMasses;
 
-	void init(float, float,  PointMass*, PointMass*);
+	int masterPoint;
+	float maxDeformRate;
+
+	void init(float, float,  PointMass*, PointMass*,float);
 };

@@ -13,7 +13,7 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 {
 	this->renderer = renderer;
 
-	timeStep = 1.0f / 60.0f;
+	timeStep = 1.0f / 40.0f;
 	timeAccumulator = 0.0f;
 
 	//initialize forces 
@@ -26,8 +26,8 @@ PhysicsEngine::PhysicsEngine(Render* renderer)
 
 
 	//initialize objects
-	width = 22;
-	height = 22;
+	width = 35;
+	height = 35;
 
 	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 1.0f);
 	activeInputManager->registerKeyboardInput(cloth);

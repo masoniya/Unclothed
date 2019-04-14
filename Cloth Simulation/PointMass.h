@@ -25,21 +25,26 @@ public:
 	void setVelocity(glm::vec3 vel);
 	void setMass(float mass);
 	void setImmovable();
+	void setIdentifier(int id);
 	void addNormal(glm::vec3 normal);
 	void calculatePointNormal();
 
 	void printPos();
 
-private:
+	bool operator==(const PointMass& other);
+
+protected:
+	int identfier;
 	float mass;
+	bool immovable;
+
 
 	glm::vec3 position;
 	glm::vec3 velocity;
 	glm::vec3 forceAccum;
 	glm::vec3 pointNormal;
 	std::vector<glm::vec3> normalAccum;
-
-	bool immovable;
+	
 
 	void init(float mass, glm::vec3 position, glm::vec3 velocity, bool immovable);
 
