@@ -167,8 +167,6 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 	}
 	std::cout << "\n..............................................\n";*/
 
-	buttonDown = false;
-	useVertexNormals = true;
 }
 
 void Cloth::update(float deltaTime)
