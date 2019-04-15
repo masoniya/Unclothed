@@ -6,10 +6,6 @@ Spring::Spring(float k, float d, PointMass * particle1, PointMass * particle2,fl
 	init(k, d, particle1, particle2,maxRate);
 
 }
-Spring::Spring()
-{
-
-}
 
 
 float Spring::getRestLength()
@@ -21,7 +17,6 @@ float Spring::getCurrentLength()
 {
 	glm::vec3 diff = pointMasses[0]->getPosition() - pointMasses[1]->getPosition();
 	return glm::length(diff);
-
 }
 
 void Spring::setMasterPoint(PointMass * master)
@@ -35,6 +30,7 @@ void Spring::setMasterPoint(PointMass * master)
 
 }
 
+//performance critical function (optimize to shit)
 void Spring::applyForce()
 {
 
@@ -42,14 +38,12 @@ void Spring::applyForce()
 
 	glm::vec3 velDiff = pointMasses[0]->getVelocity() - pointMasses[1]->getVelocity();
 	
-
-	float length = getCurrentLength();
-
+	//float length = getCurrentLength();
+	float length = glm::length(posDiff); //~ 10fps faster
 
 	glm::vec3 dir = glm::normalize(posDiff);
 
-
-	glm::vec3 force = -(springConst * (length - restLength) ) *dir - (velDiff * dampingConst);
+	glm::vec3 force = -(springConst * (length - restLength)) * dir - (velDiff * dampingConst);
 	
 	
 
@@ -89,5 +83,4 @@ void Spring::init(float k, float d,  PointMass * particle1, PointMass * particle
 	
 
 	this->restLength = glm::length(particle1->getPosition() - particle2->getPosition());
-
 }

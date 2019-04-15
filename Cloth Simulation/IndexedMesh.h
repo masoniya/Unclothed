@@ -6,6 +6,7 @@
 class IndexedMesh : public Mesh
 {
 public:
+	IndexedMesh();
 	IndexedMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
 	std::vector<unsigned int> indices;

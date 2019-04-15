@@ -18,19 +18,21 @@ const float k_const_bending = 300.0f;
 
 const float damp = 0.1f;
 
-class Cloth : public DeformableBody, public KeyboardControl
+class Cloth : public DeformableBody
 {
 public:
-	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass);
+	Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass);
 	
-	void init(glm::vec3 top_left,int num_cols , int num_rows, float width, float height, float mass);
+	void init(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass);
+
 	void update(float deltaTime);
 
 	float* getVertexData();
 
-	int width, height;
+	float* getVertexDataIndexed();
+	int* getIndexData();
 
-	void manageKeyboardInput(GLFWwindow *window) override;
+	int width, height;
 
 private:
 
@@ -40,10 +42,11 @@ private:
 	set<SpringPointMass*> fixedPoints;
 
 	float* vertexData;
-	float mass;
 
-	bool buttonDown;
-	bool useVertexNormals;
+	float* vertexDataIndexed;
+	int* indexData;
+
+	float mass;
 
 	void buildOrderedSprings();
 

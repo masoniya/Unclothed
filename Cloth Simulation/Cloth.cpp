@@ -5,13 +5,15 @@
 #include "SemiImpEuler.h"
 
 
-Cloth::Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height,float mass)
+extern float deltaTime;
+
+Cloth::Cloth(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass)
 {
-	init(top_left, num_cols, num_rows, width, height,mass);
+	init(top_left, num_cols, num_rows, width, height, mass);
 }
 
 
-void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,float height,float mass)
+void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, float height, float mass)
 {
 	//initialize the particles array
 	this->width = num_cols;
@@ -22,6 +24,10 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 	this->vertexData = new float[size];
 
 	allPoints = new SpringPointMass*[num_rows];
+	this->vertexDataIndexed = new float[num_rows * num_cols * 8];
+	this->indexData = new int[(num_cols - 1) * (num_rows - 1) * 6];
+
+	//allPoints = new PointMass*[num_rows];
 
 	for (int i = 0; i < num_rows; i++) {
 		allPoints[i] = new SpringPointMass[num_cols];
@@ -163,16 +169,16 @@ void Cloth::init(glm::vec3 top_left,int num_cols , int num_rows, float width,flo
 
 	buttonDown = false;
 	useVertexNormals = true;
-
 }
 
 void Cloth::update(float deltaTime)
 {
-	//apply internal forces
+	//apply internal forces (~ 4ms)
 	for (Spring* spring : allSprings) {
 		spring->applyForce();
-
 	}
+
+	//(~ 0.3ms)
 	solver->solve(deltaTime);
 
 	for (Spring* spring : adjustableSprings) {
@@ -288,222 +294,290 @@ float * Cloth::getVertexData()
 {
 	int offset = 0;
 
-	float texCoordXStep = 1.0f / (width - 1);
-	float texCoordYStep = 1.0f / (height - 1);
+	bool calculateTexCoords = true;
+	bool weird = false;
+	float repeatTileCount = 2.0f;
 
-	
-	
-	
-	if (useVertexNormals) {
-		for (Face *face : faces) {
-			
-			face->calcNormal();
-			
-			face->updatePointNormals();
-			
-		}
-	
-	
+	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
+	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
 
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				allPoints[i][j].calculatePointNormal();
-			}
-		}
+
+	//calculate face normals (~ 1.2ms)
+	//double beforeNormal = glfwGetTime();
+	for (Face *face : faces) {
+		//(~ 0.8ms)
+		face->calcNormal();
+		//(~ 0.8ms)
+		face->updatePointNormals();
 	}
 
-	
+	//double afterNormal = glfwGetTime();
+	//calculate point normals (~ 0.8ms)
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			allPoints[i][j].calculatePointNormal();
+		}
+	}
+	//double afterAverage = glfwGetTime();
 
+	//double start = glfwGetTime();
+	//(! 0.2ms)
 	for (int i = 0; i < height - 1; i++) {
-
 		for (int j = 0; j < width - 1; j++) {
 
-			if (useVertexNormals) {
-				PointMass topLeft = allPoints[i][j];
-				PointMass bottomLeft = allPoints[i + 1][j];
-				PointMass bottomRight = allPoints[i + 1][j + 1];
-				PointMass topRight = allPoints[i][j + 1];
+			glm::vec3 topLeftPos = allPoints[i][j].getPosition();
+			glm::vec3 bottomLeftPos = allPoints[i + 1][j].getPosition();
+			glm::vec3 bottomRightPos = allPoints[i + 1][j + 1].getPosition();
+			glm::vec3 topRightPos = allPoints[i][j + 1].getPosition();
+				
+			glm::vec3 topLeftNormal = allPoints[i][j].getNormal();
+			glm::vec3 bottomLeftNormal = allPoints[i + 1][j].getNormal();
+			glm::vec3 bottomRightNormal = allPoints[i + 1][j + 1].getNormal();
+			glm::vec3 topRightNormal = allPoints[i][j + 1].getNormal();
 
-				//top left
-				vertexData[offset++] = topLeft.getPosition().x;
-				vertexData[offset++] = topLeft.getPosition().y;
-				vertexData[offset++] = topLeft.getPosition().z;
+			//top left
+			vertexData[offset++] = topLeftPos.x;
+			vertexData[offset++] = topLeftPos.y;
+			vertexData[offset++] = topLeftPos.z;
 
-				vertexData[offset++] = topLeft.getNormal().x;
-				vertexData[offset++] = topLeft.getNormal().y;
-				vertexData[offset++] = topLeft.getNormal().z;
+			vertexData[offset++] = topLeftNormal.x;
+			vertexData[offset++] = topLeftNormal.y;
+			vertexData[offset++] = topLeftNormal.z;
 
+			if (!calculateTexCoords) {
 				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
-
-				//bottom left
-				vertexData[offset++] = bottomLeft.getPosition().x;
-				vertexData[offset++] = bottomLeft.getPosition().y;
-				vertexData[offset++] = bottomLeft.getPosition().z;
-
-				vertexData[offset++] = bottomLeft.getNormal().x;
-				vertexData[offset++] = bottomLeft.getNormal().y;
-				vertexData[offset++] = bottomLeft.getNormal().z;
-
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 0.0f;
-
-				//bottom right
-				vertexData[offset++] = bottomRight.getPosition().x;
-				vertexData[offset++] = bottomRight.getPosition().y;
-				vertexData[offset++] = bottomRight.getPosition().z;
-
-				//holy shit
-				//vertexData[offset++] = bottomRight.getNormal().y;
-				//vertexData[offset++] = bottomRight.getNormal().x;
-				vertexData[offset++] = bottomRight.getNormal().x;
-				vertexData[offset++] = bottomRight.getNormal().y;
-				vertexData[offset++] = bottomRight.getNormal().z;
-
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 0.0f;
-
-				//top left
-				vertexData[offset++] = topLeft.getPosition().x;
-				vertexData[offset++] = topLeft.getPosition().y;
-				vertexData[offset++] = topLeft.getPosition().z;
-
-				vertexData[offset++] = topLeft.getNormal().x;
-				vertexData[offset++] = topLeft.getNormal().y;
-				vertexData[offset++] = topLeft.getNormal().z;
-
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
-
-				//bottom right
-				vertexData[offset++] = bottomRight.getPosition().x;
-				vertexData[offset++] = bottomRight.getPosition().y;
-				vertexData[offset++] = bottomRight.getPosition().z;
-
-				vertexData[offset++] = bottomRight.getNormal().x;
-				vertexData[offset++] = bottomRight.getNormal().y;
-				vertexData[offset++] = bottomRight.getNormal().z;
-
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 0.0f;
-
-				//top right
-				vertexData[offset++] = topRight.getPosition().x;
-				vertexData[offset++] = topRight.getPosition().y;
-				vertexData[offset++] = topRight.getPosition().z;
-
-				vertexData[offset++] = topRight.getNormal().x;
-				vertexData[offset++] = topRight.getNormal().y;
-				vertexData[offset++] = topRight.getNormal().z;
-
-				vertexData[offset++] = 1.0f;
 				vertexData[offset++] = 1.0f;
 			}
-
-			//Old way that uses face normals
 			else {
-				glm::vec3 topleft = allPoints[i][j].getPosition();
-				glm::vec3 bottomleft = allPoints[i + 1][j].getPosition();
-				glm::vec3 bottomright = allPoints[i + 1][j + 1].getPosition();
-				glm::vec3 topright = allPoints[i][j + 1].getPosition();
+				if (!weird) {
+					vertexData[offset++] = (j) * texCoordXStep;
+					vertexData[offset++] = 1 - (i) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = topLeftPos.x;
+					vertexData[offset++] = topLeftPos.y;
+				}
+					
+			}
+				
+			//bottom left
+			vertexData[offset++] = bottomLeftPos.x;
+			vertexData[offset++] = bottomLeftPos.y;
+			vertexData[offset++] = bottomLeftPos.z;
 
-				//Make sure to calculate the normals using counter-clockwise order for vertices
-				glm::vec3 normal1 = Face::calcNormal(topleft, bottomleft, bottomright);
-				glm::vec3 normal2 = Face::calcNormal(topleft, bottomright, topright);
+			vertexData[offset++] = bottomLeftNormal.x;
+			vertexData[offset++] = bottomLeftNormal.y;
+			vertexData[offset++] = bottomLeftNormal.z;
 
-				//Make sure both triangles are drawn counter-clockwise
-
-				//top left
-				vertexData[offset++] = topleft.x;
-				vertexData[offset++] = topleft.y;
-				vertexData[offset++] = topleft.z;
-
-				vertexData[offset++] = normal1.x;
-				vertexData[offset++] = normal1.y;
-				vertexData[offset++] = normal1.z;
-
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
-
-				//bottom left
-				vertexData[offset++] = bottomleft.x;
-				vertexData[offset++] = bottomleft.y;
-				vertexData[offset++] = bottomleft.z;
-
-				vertexData[offset++] = normal1.x;
-				vertexData[offset++] = normal1.y;
-				vertexData[offset++] = normal1.z;
-
+			if (!calculateTexCoords) {
 				vertexData[offset++] = 0.0f;
 				vertexData[offset++] = 0.0f;
+			}
+			else {
+				if (!weird) {
+					vertexData[offset++] = (j) * texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = bottomLeftPos.x;
+					vertexData[offset++] = bottomLeftPos.y;
+				}
+			}
+				
+			//bottom right
+			vertexData[offset++] = bottomRightPos.x;
+			vertexData[offset++] = bottomRightPos.y;
+			vertexData[offset++] = bottomRightPos.z;
 
-				//bottom right
-				vertexData[offset++] = bottomright.x;
-				vertexData[offset++] = bottomright.y;
-				vertexData[offset++] = bottomright.z;
+			vertexData[offset++] = bottomRightNormal.x;
+			vertexData[offset++] = bottomRightNormal.y;
+			vertexData[offset++] = bottomRightNormal.z;
 
-				vertexData[offset++] = normal1.x;
-				vertexData[offset++] = normal1.y;
-				vertexData[offset++] = normal1.z;
-
-				vertexData[offset++] = 1.0f;
-				vertexData[offset++] = 0.0f;
-
-				//top left
-				vertexData[offset++] = topleft.x;
-				vertexData[offset++] = topleft.y;
-				vertexData[offset++] = topleft.z;
-
-				vertexData[offset++] = normal2.x;
-				vertexData[offset++] = normal2.y;
-				vertexData[offset++] = normal2.z;
-
-				vertexData[offset++] = 0.0f;
-				vertexData[offset++] = 1.0f;
-
-				//bottom right
-				vertexData[offset++] = bottomright.x;
-				vertexData[offset++] = bottomright.y;
-				vertexData[offset++] = bottomright.z;
-
-				vertexData[offset++] = normal2.x;
-				vertexData[offset++] = normal2.y;
-				vertexData[offset++] = normal2.z;
-
+			if (!calculateTexCoords) {
 				vertexData[offset++] = 1.0f;
 				vertexData[offset++] = 0.0f;
+			}
+			else {
+				if (!weird) {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = bottomRightPos.x;
+					vertexData[offset++] = bottomRightPos.y;
+				}
+			}
+				
+			//top left
+			vertexData[offset++] = topLeftPos.x;
+			vertexData[offset++] = topLeftPos.y;
+			vertexData[offset++] = topLeftPos.z;
 
-				//top right
-				vertexData[offset++] = topright.x;
-				vertexData[offset++] = topright.y;
-				vertexData[offset++] = topright.z;
+			vertexData[offset++] = topLeftNormal.x;
+			vertexData[offset++] = topLeftNormal.y;
+			vertexData[offset++] = topLeftNormal.z;
 
-				vertexData[offset++] = normal2.x;
-				vertexData[offset++] = normal2.y;
-				vertexData[offset++] = normal2.z;
+			if (!calculateTexCoords) {
+				vertexData[offset++] = 0.0f;
+				vertexData[offset++] = 1.0f;
+			}
+			else {
+				if (!weird) {
+					vertexData[offset++] = (j) * texCoordXStep;
+					vertexData[offset++] = 1 - (i) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = topLeftPos.x;
+					vertexData[offset++] = topLeftPos.y;
+				}
+			}
+				
+			//bottom right
+			vertexData[offset++] = bottomRightPos.x;
+			vertexData[offset++] = bottomRightPos.y;
+			vertexData[offset++] = bottomRightPos.z;
 
+			vertexData[offset++] = bottomRightNormal.x;
+			vertexData[offset++] = bottomRightNormal.y;
+			vertexData[offset++] = bottomRightNormal.z;
+
+			if (!calculateTexCoords) {
+				vertexData[offset++] = 1.0f;
+				vertexData[offset++] = 0.0f;
+			}
+			else {
+				if (!weird) {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i + 1) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = bottomRightPos.x;
+					vertexData[offset++] = bottomRightPos.y;
+				}
+			}
+				
+			//top right
+			vertexData[offset++] = topRightPos.x;
+			vertexData[offset++] = topRightPos.y;
+			vertexData[offset++] = topRightPos.z;
+
+			vertexData[offset++] = topRightNormal.x;
+			vertexData[offset++] = topRightNormal.y;
+			vertexData[offset++] = topRightNormal.z;
+
+			if (!calculateTexCoords) {
 				vertexData[offset++] = 1.0f;
 				vertexData[offset++] = 1.0f;
 			}
+			else {
+				if (!weird) {
+					vertexData[offset++] = (j + 1) * texCoordXStep;
+					vertexData[offset++] = 1 - (i) * texCoordYStep;
+				}
+				else {
+					vertexData[offset++] = topRightPos.x;
+					vertexData[offset++] = topRightPos.y;
+				}
+			}
+
 		}
 	}
+
+	//double end = glfwGetTime();
+	/*static double secondCounter = 0.0;
+	secondCounter += deltaTime;
+	if (secondCounter > 1.0) {
+		secondCounter -= 1.0;
+		std::cout << "Normal Calculation Time : " << (afterNormal - beforeNormal) * 1000 << std::endl;
+		std::cout << "Normal Averaging Time : " << (afterAverage - afterNormal) * 1000 << std::endl;
+		std::cout << "Vertex Data Time : " << (end - start) * 1000 << std::endl;
+	}*/
 	
 	return vertexData;
 
 }
 
-void Cloth::manageKeyboardInput(GLFWwindow * window)
+float * Cloth::getVertexDataIndexed()
 {
-	//button just got clicked
-	if ((glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS) && !buttonDown) {
-		buttonDown = true;
-		useVertexNormals = !useVertexNormals;
-		std::cout << "switching mode" << std::endl;
+	int offset = 0;
+
+	bool calculateTexCoords = true;
+	bool weird = false;
+	float repeatTileCount = 2.0f;
+
+	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
+	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
+
+	for (Face *face : faces) {
+		face->calcNormal();
+		face->updatePointNormals();
 	}
-	//button just got released
-	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_RELEASE && buttonDown) {
-		buttonDown = false;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			allPoints[i][j].calculatePointNormal();
+		}
 	}
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+
+			glm::vec3 position = allPoints[i][j].getPosition();
+			glm::vec3 normal = allPoints[i][j].getNormal();
+
+			//top left
+			vertexDataIndexed[offset++] = position.x;
+			vertexDataIndexed[offset++] = position.y;
+			vertexDataIndexed[offset++] = position.z;
+
+			vertexDataIndexed[offset++] = normal.x;
+			vertexDataIndexed[offset++] = normal.y;
+			vertexDataIndexed[offset++] = normal.z;
+
+			if (!calculateTexCoords) {
+				vertexDataIndexed[offset++] = 0.0f;
+				vertexDataIndexed[offset++] = 1.0f;
+			}
+			else {
+				if (!weird) {
+					vertexDataIndexed[offset++] = (j) * texCoordXStep;
+					vertexDataIndexed[offset++] = 1 - (i) * texCoordYStep;
+				}
+				else {
+					vertexDataIndexed[offset++] = position.x;
+					vertexDataIndexed[offset++] = position.y;
+				}
+			}
+
+		}
+	}
+
+	return vertexDataIndexed;
+}
+
+int * Cloth::getIndexData()
+{
+	int offset = 0;
+
+	for (int i = 0; i < height - 1; i++) {
+		for (int j = 0; j < width - 1; j++) {
+			
+			int topLeftIndex = i * width + j;
+			int bottomLeftIndex = (i + 1) * width + j;
+			int bottomRightIndex = (i + 1) * width + (j + 1);
+			int topRightIndex = i * width + (j + 1);
+
+			indexData[offset++] = topLeftIndex;
+			indexData[offset++] = bottomLeftIndex;
+			indexData[offset++] = bottomRightIndex;
+			indexData[offset++] = topLeftIndex;
+			indexData[offset++] = bottomRightIndex;
+			indexData[offset++] = topRightIndex;
+
+		}
+	}
+
+	return indexData;
 }
 
 

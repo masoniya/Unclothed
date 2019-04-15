@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "PointMass.h"
 
 
@@ -78,18 +80,16 @@ void PointMass::setIdentifier(int id)
 //add a face normal to the normal accumulator
 void PointMass::addNormal(glm::vec3 normal)
 {
-	normalAccum.push_back(normal);
+	normalAccum += normal;
+	normalCount++;
 }
 
 //calculate average normal then clear the accumulator
 void PointMass::calculatePointNormal()
 {
-	glm::vec3 totalNormal(0.0f);
-	for (glm::vec3 normal : normalAccum) {
-		totalNormal += normal;
-	}
-	pointNormal = glm::normalize((1.0f / normalAccum.size()) * totalNormal);
-	normalAccum.clear();
+	pointNormal = normalAccum / (float)normalCount;
+	normalAccum = glm::vec3(0);
+	normalCount = 0;
 }
 
 void PointMass::addForce(const glm::vec3 &force)

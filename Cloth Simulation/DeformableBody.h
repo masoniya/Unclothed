@@ -1,6 +1,6 @@
 #pragma once
 
-#include<vector>
+#include <vector>
 
 #include "PointMass.h"
 #include "ForceGenerator.h"
@@ -23,5 +23,4 @@ protected:
 	std::vector<Face*> faces;
 	
 	Integrator* solver;
-
 };

@@ -22,6 +22,7 @@
 #include "ResourceManager.h"
 #include "Render.h"
 #include "PhysicsEngine.h"
+#include "SkyBox.h"
 
 
 const int WIDTH = 1366;
@@ -33,6 +34,9 @@ const char* const fragmentShaderPath = "shaders/mainShader.frag";
 
 const char lampVertShaderPath[] = "shaders/LampShader.vert";
 const char lampFragShaderPath[] = "shaders/LampShader.frag";
+
+const std::string skyboxVertShaderPath = "shaders/skyboxShader.vert";
+const std::string skyboxFragShaderPath = "shaders/skyboxShader.frag";
 
 const std::string diffPath = "resources/clothTile.jpg";
 const std::string specPath = "resources/clothSpecular.png";
@@ -48,6 +52,16 @@ const glm::vec3 cubePositions[] = {
 	glm::vec3( 1.5f,  2.0f, -2.5f),
 	glm::vec3( 1.5f,  0.2f, -1.5f),
 	glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
+const std::vector<std::string> skyboxFaces = {
+	
+	"resources/skybox/space_right.png",
+	"resources/skybox/space_left.png",
+	"resources/skybox/space_up.png",
+	"resources/skybox/space_down.png",
+	"resources/skybox/space_back.png",
+	"resources/skybox/space_front.png"
 };
 
 struct Material {
@@ -77,14 +91,16 @@ public:
 	Engine();
 
 	void start();
-	void initcloth(float * vertexdata,int size);
-	void updatecloth(float * vertexdata,int size);
+
+	void initCloth(float * vertexdata,int size) override;
+	void initClothIndexed(float *vertexData, int vertexDataSize, int *indexData, int indexDataSize) override;
+	void updateCloth(float * vertexdata,int size) override;
 
 private:
 	float* vertices;
 	int size;
-	PhysicsEngine* physics;
-	uint32_t indices[36];
+	int* indices;
+	int indicesSize;
 	uint32_t vbo;
 	uint32_t vao;
 	uint32_t ebo;
@@ -94,6 +110,7 @@ private:
 
 	ShaderProgram program;
 	ShaderProgram lampProgram;
+	ShaderProgram skyboxProgram;
 	Window *window;
 	Camera *camera;
 	InputManager *inputManager;
@@ -101,6 +118,9 @@ private:
 	PointLight *lamps[4];
 	SpotLight *flashlight;
 	Material *material;
+	SkyBox *skybox;
+
+	PhysicsEngine* physics;
 
 	void init();
 	void mainLoop();

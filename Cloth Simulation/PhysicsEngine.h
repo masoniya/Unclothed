@@ -9,9 +9,12 @@
 class PhysicsEngine
 {
 public:
+	PhysicsEngine();
 	PhysicsEngine(Render* renderer);
 	void updatePhyics(float deltaTime);
 
+	void addPhysicalObject(DeformableBody* physicalObject);
+	void addExternalForce(ForceGenerator* externalForce);
 
 private:	
 	std::vector<DeformableBody*> physicalObjects;
@@ -24,7 +27,10 @@ private:
 
 	void updateRenderer();
 
-	int width;
-	int height;
+	//int width;
+	//int height;
 
+	int size;
+	int sizeVertices;
+	int sizeIndices;
 };

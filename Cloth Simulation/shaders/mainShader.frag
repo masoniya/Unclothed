@@ -86,7 +86,7 @@ void main()
 	}
 	
 	for(int i = 0; i < pointLightCount; i++){
-		resultColor += calcPointLight(pointLights[i], norm, fragWorldPos, viewDir);
+		//resultColor += calcPointLight(pointLights[i], norm, fragWorldPos, viewDir);
 	}
 	
 	for(int i = 0; i < spotLightCount; i++){

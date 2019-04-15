@@ -7,15 +7,14 @@
 class DragForce : public ForceGenerator
 {
 public:
-	void applyForce();
-	void addPhysicalObject(Drag* body);
-
 	DragForce();
 	DragForce(float damp);
+
+	void applyForce();
+	void addPhysicalObject(Drag* body);
 
 private:
 
 	float damp;
 	std::vector<Drag*> physicalObjects;
-
 };

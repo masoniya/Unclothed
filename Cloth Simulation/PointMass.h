@@ -1,8 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-
 #include <glm/glm.hpp>
 
 
@@ -10,7 +7,7 @@ class PointMass
 {
 public:
 	PointMass();
-	PointMass(float, glm::vec3, bool);
+	PointMass(float mass, glm::vec3 pos, bool immovable);
 	
 	void addForce(const glm::vec3 &force);
 	void clearAccum();
@@ -43,8 +40,10 @@ protected:
 	glm::vec3 velocity;
 	glm::vec3 forceAccum;
 	glm::vec3 pointNormal;
-	std::vector<glm::vec3> normalAccum;
-	
+
+	glm::vec3 normalAccum;
+	unsigned int normalCount;
+
 
 	void init(float mass, glm::vec3 position, glm::vec3 velocity, bool immovable);
 
