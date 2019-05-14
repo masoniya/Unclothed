@@ -19,8 +19,10 @@ void PointMass::init(float mass, glm::vec3 position, glm::vec3 velocity, bool im
 	this->mass = mass;
 	this->immovable = immovable;
 	this->position = position;
+	this->prevPostion = position;
 	this->velocity = velocity;
 	this->forceAccum = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->collides = false;
 }
 
 float PointMass::getMass()
@@ -51,6 +53,7 @@ glm::vec3 PointMass::getNormal()
 void PointMass::setPosition(glm::vec3 pos)
 {
 	if (!immovable) {
+		prevPostion = this->position;
 		position = pos;
 	}
 }

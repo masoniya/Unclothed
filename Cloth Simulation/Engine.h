@@ -23,6 +23,7 @@
 #include "Render.h"
 #include "PhysicsEngine.h"
 #include "SkyBox.h"
+#include "RigidShape.h"
 
 
 const int WIDTH = 1366;
@@ -119,6 +120,7 @@ private:
 	SpotLight *flashlight;
 	Material *material;
 	SkyBox *skybox;
+	RigidShape *sphere;
 
 	PhysicsEngine* physics;
 

@@ -17,6 +17,9 @@ public:
 
 	void applyForce();
 	void adjust();
+	void adjust2();
+	bool adjust3(float &error);
+	void adjust_vel();
 	
 private:
 

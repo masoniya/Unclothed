@@ -18,6 +18,7 @@ public:
 	Model(std::string path);
 
 	void draw(ShaderProgram program);
+	std::vector<IndexedMesh> getMesh();
 
 private:
 	std::vector<IndexedMesh> meshes;

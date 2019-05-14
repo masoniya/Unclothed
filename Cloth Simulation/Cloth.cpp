@@ -43,7 +43,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 			float newZ = top_left.z + ((float)i / num_rows) * height;
 
 			allPoints[i][j].setPosition(glm::vec3(newX , newY, newZ));
-			allPoints[i][j].setMass(mass/  (width * height));
+			allPoints[i][j].setMass(/*mass/ (num_rows* num_cols)*/1.0f);
 			allPoints[i][j].setIdentifier(id);
 
 			if  (i == 0 && j == 0) {
@@ -54,14 +54,23 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 				allPoints[i][j].setImmovable();
 				fixedPoints.insert(&allPoints[i][j]);
 			}
+		/*	if (i == 0 && j == num_cols/2) {
+				allPoints[i][j].setImmovable();
+				fixedPoints.insert(&allPoints[i][j]);
+			}
+			if (i == 0 && j == num_cols / 4) {
+				allPoints[i][j].setImmovable();
+				fixedPoints.insert(&allPoints[i][j]);
+			}*/
+			
 
 			/*if (i == num_rows-1 && j == 0) {
 				allPoints[i][j].setImmovable();
 			}*/
 			/*if (i == num_rows-1 && j == num_cols - 1) {
 				allPoints[i][j].setImmovable();
-			}
-*/
+			}*/
+
 			/*if (i == 0) {
 				allPoints[i][j].setImmovable();
 
@@ -92,6 +101,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 				point2->addHorizentalSpring(spring, point1);
 
 				allSprings.push_back(spring);
+				adjustableSprings.push_back(spring);
 			}
 			if (i + 1 < num_rows) {
 				point1 = &allPoints[i][j];
@@ -102,6 +112,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 				point2->addVerticalSpring(spring, point1);
 
 				allSprings.push_back(spring);
+				adjustableSprings.push_back(spring);
 			}
 
 			//shear springs
@@ -115,6 +126,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 					point2->addShearSpring(spring, point1);
 
 					allSprings.push_back(spring);
+					adjustableSprings.push_back(spring);
 				}
 
 				if (j - 1 >= 0) {
@@ -126,6 +138,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 					point2->addShearSpring(spring, point1);
 
 					allSprings.push_back(spring);
+					adjustableSprings.push_back(spring);
 				}
 			}
 
@@ -155,7 +168,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 
 	solver = new SemiImpEuler(points);
 
-	buildOrderedSprings();
+//	buildOrderedSprings();
 
 	/*for (int i = 0; i < num_rows ; i++) {
 
@@ -177,11 +190,25 @@ void Cloth::update(float deltaTime)
 	}
 
 	//(~ 0.3ms)
+	
+
 	solver->solve(deltaTime);
 
-	for (Spring* spring : adjustableSprings) {
-		spring->adjust();
+	float error = 0;
+
+	for (int i = 0; i <80; i++) {
+		for (Spring* spring : adjustableSprings) {
+			spring->adjust3(error);
+		}
 	}
+
+	for (Face *face : faces) {
+		face->update();
+		
+	}
+
+	
+	
 }
 /* will be called currently in constructor because the fixed points are static
 
@@ -213,27 +240,7 @@ void Cloth::buildOrderedSprings()
 		}
 
 		//three passes
-		for (SpringPointMass* vs : temp_q) {
-
-			SpringPointList horiz = vs->getHorizentalSprings();
-
-			for (pair<Spring*, SpringPointMass*> pair : horiz) {
-
-				spring = pair.first;
-				point = pair.second;
-
-				if (point->canExpand()) {
-
-					point->increment();
-					q.push(point);
-					spring->setMasterPoint(vs);
-					adjustableSprings.push_back(spring);
-
-				}
-
-			}
-
-		}
+		
 		for (SpringPointMass* vs : temp_q) {
 
 			SpringPointList verti = vs->getVerticalSprings();
@@ -255,6 +262,7 @@ void Cloth::buildOrderedSprings()
 			}
 
 		}
+
 		for (SpringPointMass* vs : temp_q) {
 
 			SpringPointList shear = vs->getShearSprings();
@@ -276,7 +284,27 @@ void Cloth::buildOrderedSprings()
 			}
 
 		}
+		for (SpringPointMass* vs : temp_q) {
 
+			SpringPointList horiz = vs->getHorizentalSprings();
+
+			for (pair<Spring*, SpringPointMass*> pair : horiz) {
+
+				spring = pair.first;
+				point = pair.second;
+
+				if (point->canExpand()) {
+
+					point->increment();
+					q.push(point);
+					spring->setMasterPoint(vs);
+					adjustableSprings.push_back(spring);
+
+				}
+
+			}
+
+		}
 		//clear the temp_q
 		temp_q.clear();
 
@@ -506,8 +534,9 @@ float * Cloth::getVertexDataIndexed()
 	float texCoordXStep = 1.0f / (width - 1) * repeatTileCount;
 	float texCoordYStep = 1.0f / (height - 1) * repeatTileCount;
 
+	//moved to inside the update function
 	for (Face *face : faces) {
-		face->calcNormal();
+		
 		face->updatePointNormals();
 	}
 

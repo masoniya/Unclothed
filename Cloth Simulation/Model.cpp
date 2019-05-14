@@ -19,6 +19,11 @@ void Model::draw(ShaderProgram program)
 	}
 }
 
+std::vector<IndexedMesh> Model::getMesh()
+{
+	return meshes;
+}
+
 void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;

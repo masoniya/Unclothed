@@ -25,18 +25,24 @@ public:
 	void setIdentifier(int id);
 	void addNormal(glm::vec3 normal);
 	void calculatePointNormal();
+	bool immovable;
 
 	void printPos();
 
 	bool operator==(const PointMass& other);
 
+	glm::vec3 prevPostion;
+	glm::vec3 position;
+
+	bool collides;
+
 protected:
 	int identfier;
 	float mass;
-	bool immovable;
+	
 
 
-	glm::vec3 position;
+	
 	glm::vec3 velocity;
 	glm::vec3 forceAccum;
 	glm::vec3 pointNormal;

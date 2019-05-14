@@ -150,8 +150,10 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PointMass.cpp" />
+    <ClCompile Include="RigidShape.cpp" />
     <ClCompile Include="SemiImpEuler.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SpringPointMass.cpp" />
     <ClCompile Include="ToString.cpp" />
@@ -159,7 +161,9 @@
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="WindForce.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,7 +192,9 @@
     <ClInclude Include="PointMass.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="RigidShape.h" />
     <ClInclude Include="SemiImpEuler.h" />
+    <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="SpringPointMass.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="ToString.h" />
@@ -197,7 +203,10 @@
     <ClInclude Include="Spring.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Wind.h" />
+    <ClInclude Include="WindForce.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

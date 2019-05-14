@@ -16,6 +16,8 @@ public:
 	void addPhysicalObject(DeformableBody* physicalObject);
 	void addExternalForce(ForceGenerator* externalForce);
 
+	void addShape(RigidShape * shape);
+
 private:	
 	std::vector<DeformableBody*> physicalObjects;
 	std::vector<ForceGenerator*> externalForces;
@@ -33,4 +35,6 @@ private:
 	int size;
 	int sizeVertices;
 	int sizeIndices;
+
+	RigidShape* shape;
 };

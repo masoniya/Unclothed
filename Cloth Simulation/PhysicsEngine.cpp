@@ -2,10 +2,11 @@
 #include "Cloth.h"
 #include "GravitationalForce.h"
 #include "DragForce.h"
+#include "WindForce.h"
 
 
 PhysicsEngine::PhysicsEngine() :
-	timeStep(1.0f / 60.0f),
+	timeStep(1.0f / 60),
 	timeAccumulator(0.0f)
 {
 }
@@ -17,21 +18,24 @@ PhysicsEngine::PhysicsEngine(Render* renderer) :
 	this->renderer = renderer;
 
 	//initialize forces 
-	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -1.8f, 0));
-	DragForce* drag = new DragForce(0.4f);
+	GravitationalForce* gravity = new GravitationalForce(glm::vec3(0, -4.8f, 0));
+	DragForce* drag = new DragForce(2.0f);
+	WindForce* wind = new WindForce();
 	
 	this->externalForces.push_back(gravity);
 	this->externalForces.push_back(drag);
+	this->externalForces.push_back(wind);
 
 	//initialize objects
-	int width = 25;
-	int height = 25;
+	int width =20;
+	int height =20;
 
-	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 1.0f);
+	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 200.0f);
 
 	this->physicalObjects.push_back(cloth);
 	gravity->addPhysicalObject(cloth);
 	drag->addPhysicalObject(cloth);
+	wind->addPhysicalObject(cloth);
 	
 	size = (width - 1) * (height - 1) * 8 * 6;
 	sizeVertices = width * height * 8;
@@ -47,18 +51,28 @@ void PhysicsEngine::updatePhyics(float deltaTime)
 
 	while (timeAccumulator >= timeStep) {
 		
+		
+		
 		//apply the external forces (~ 0.2ms)
 		for (ForceGenerator* forceGenerator : externalForces) {
 			forceGenerator->applyForce();
 		}
 
+		
+
 		//call update method on each body which calculates the internal forces and then integrates (~ 4.5ms)
 		for (DeformableBody* object : physicalObjects) {
 			object->update(timeStep);
 		}
+		
+		for (DeformableBody* object : physicalObjects) {
+			object->collide(shape);
+		}
+		
 
 		timeAccumulator -= timeStep;
 	}
+	
 	//(~ 2ms)
 	this->updateRenderer();
 
@@ -72,6 +86,12 @@ void PhysicsEngine::addPhysicalObject(DeformableBody * physicalObject)
 void PhysicsEngine::addExternalForce(ForceGenerator * externalForce)
 {
 	externalForces.push_back(externalForce);
+}
+
+void PhysicsEngine::addShape(RigidShape * shape)
+{
+	this->shape = shape;
+
 }
 
 void PhysicsEngine::updateRenderer()

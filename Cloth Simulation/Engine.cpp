@@ -50,6 +50,7 @@ void Engine::init()
 	activeInputManager->registerMouseInput(camera);
 	activeInputManager->registerScrollInput(camera);
 
+	
 	this->physics = new PhysicsEngine(this);
 
 	createVertexObjects();
@@ -60,6 +61,11 @@ void Engine::init()
 
 	skybox = new SkyBox(skyboxFaces);
 	skybox->initDefaultMesh();
+
+	sphere = new RigidShape("resources/sphere.fbx");
+	activeInputManager->registerKeyboardInput(sphere);
+	this->physics->addShape(sphere);
+	
 
 	//depth testing
 	glEnable(GL_DEPTH_TEST);
@@ -75,6 +81,7 @@ void Engine::init()
 	
 	//seamless cubemap
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	//glEnable(glPolygonMode);
 }
 
 void Engine::mainLoop()
@@ -254,7 +261,7 @@ void Engine::renderFrame()
 
 	//draw 10 cloths
 	
-	for (unsigned int i = 0; i < 10; i++)
+	for (unsigned int i = 0; i < 1; i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePositions[i]);
@@ -263,6 +270,10 @@ void Engine::renderFrame()
 		//glDrawArrays(GL_TRIANGLES, 0, this->size / 8);
 		glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, 0);
 	}
+
+
+	program.setUniformMat4("model", sphere->getTransform());
+	sphere->draw(program);
 
 	lampProgram.useProgram();
 

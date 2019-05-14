@@ -1,7 +1,8 @@
 #pragma once
 
 #include "PointMass.h"
-
+#include "Triangle.h"
+#include <vector>
 
 class Face
 {
@@ -11,8 +12,11 @@ public:
 	float getArea();
 	void calcNormal();
 	void updatePointNormals();
+	void update();
 
 	glm::vec3 normal;
+	Triangle * triangle;
+	std::vector<PointMass*> points;
 
 	static glm::vec3 calcNormal(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3);
 
