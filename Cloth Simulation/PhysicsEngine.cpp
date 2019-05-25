@@ -12,7 +12,7 @@ PhysicsEngine::PhysicsEngine() :
 }
 
 PhysicsEngine::PhysicsEngine(Render* renderer) :
-	timeStep(1.0f / 60.0f),
+	timeStep(1.0f / 70.0f),
 	timeAccumulator(0.0f)
 {
 	this->renderer = renderer;
@@ -24,18 +24,18 @@ PhysicsEngine::PhysicsEngine(Render* renderer) :
 	
 	this->externalForces.push_back(gravity);
 	this->externalForces.push_back(drag);
-	this->externalForces.push_back(wind);
+	//this->externalForces.push_back(wind);
 
 	//initialize objects
-	int width =20;
-	int height =20;
+	int width =25;
+	int height =25;
 
-	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.5f, -0.5f), width, height, 1.0f, 1.0f, 200.0f);
+	Cloth* cloth = new Cloth(glm::vec3(-0.5f, 0.75f, -0.5f), width, height, 1.0f, 1.0f, 200.0f);
 
 	this->physicalObjects.push_back(cloth);
 	gravity->addPhysicalObject(cloth);
 	drag->addPhysicalObject(cloth);
-	wind->addPhysicalObject(cloth);
+	//awind->addPhysicalObject(cloth);
 	
 	size = (width - 1) * (height - 1) * 8 * 6;
 	sizeVertices = width * height * 8;
@@ -61,15 +61,23 @@ void PhysicsEngine::updatePhyics(float deltaTime)
 		
 
 		//call update method on each body which calculates the internal forces and then integrates (~ 4.5ms)
+		
+
 		for (DeformableBody* object : physicalObjects) {
 			object->update(timeStep);
 		}
-		
+
+
+		// collision detection with shape
 		for (DeformableBody* object : physicalObjects) {
-			object->collide(shape);
+
+			if (object->box->intersect(shape->box)) {
+
+				object->collide(shape);
+
+			}
 		}
 		
-
 		timeAccumulator -= timeStep;
 	}
 	

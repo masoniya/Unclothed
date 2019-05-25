@@ -43,7 +43,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 			float newZ = top_left.z + ((float)i / num_rows) * height;
 
 			allPoints[i][j].setPosition(glm::vec3(newX , newY, newZ));
-			allPoints[i][j].setMass(/*mass/ (num_rows* num_cols)*/1.0f);
+			allPoints[i][j].setMass(mass/ (num_rows* num_cols)/*0.5f*/);
 			allPoints[i][j].setIdentifier(id);
 
 			if  (i == 0 && j == 0) {
@@ -66,8 +66,8 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 
 			/*if (i == num_rows-1 && j == 0) {
 				allPoints[i][j].setImmovable();
-			}*/
-			/*if (i == num_rows-1 && j == num_cols - 1) {
+			}
+			if (i == num_rows-1 && j == num_cols - 1) {
 				allPoints[i][j].setImmovable();
 			}*/
 
@@ -82,7 +82,7 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 		}
 	}
 	
-	float maxDeformRrate = 40.0f;
+	float maxDeformRrate = 80.0f;
 	// add springs
 	for (int i = 0; i < num_rows; i++) {
 		for (int j = 0; j < num_cols; j++) {
@@ -168,22 +168,32 @@ void Cloth::init(glm::vec3 top_left, int num_cols, int num_rows, float width, fl
 
 	solver = new SemiImpEuler(points);
 
-//	buildOrderedSprings();
+	std::vector<glm::vec3 > temp;
 
-	/*for (int i = 0; i < num_rows ; i++) {
+	for (PointMass * point:this->points) {
 
-		for (int j = 0; j < num_cols ; j++) {
+		temp.push_back(point->position);
 
-			allPoints[i][j].printPos();
-
-		}
 	}
-	std::cout << "\n..............................................\n";*/
+
+	this->box = new AABB(temp);
+
+
 
 }
 
 void Cloth::update(float deltaTime)
 {
+
+	std::vector<glm::vec3 > temp;
+
+	for (PointMass * point : this->points) {
+
+		temp.push_back(point->position);
+
+	}
+	this->box->update(temp);
+
 	//apply internal forces (~ 4ms)
 	for (Spring* spring : allSprings) {
 		spring->applyForce();
@@ -196,11 +206,12 @@ void Cloth::update(float deltaTime)
 
 	float error = 0;
 
-	for (int i = 0; i <80; i++) {
+	/*for (int i = 0; i < 50; i++) {
 		for (Spring* spring : adjustableSprings) {
 			spring->adjust3(error);
 		}
-	}
+	}*/
+
 
 	for (Face *face : faces) {
 		face->update();

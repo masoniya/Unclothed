@@ -12,11 +12,11 @@
 
 
 
-const float k_const_structure = 600.0f;
-const float k_const_shear = 600.0f;
-const float k_const_bending = 600.0f;
+const float k_const_structure = 200.0f;
+const float k_const_shear = 200.0f;
+const float k_const_bending = 200.0f;
 
-const float damp = 0.8f;
+const float damp = 1.0f;
 
 class Cloth : public DeformableBody
 {

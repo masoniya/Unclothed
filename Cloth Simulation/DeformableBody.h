@@ -24,6 +24,7 @@ public:
 	void collide(RigidShape* shape);
 
 	float timer = 0;
+	AABB* box;
 protected:
 	std::vector<PointMass*> points;
 	std::vector<Face*> faces;

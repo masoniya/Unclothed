@@ -15,170 +15,191 @@ Triangle::Triangle(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 
 	
 
+	// n = normalize ( (p2-p1) Cross (p3-p1) )
+	this->normal = glm::normalize(glm::cross( getEdge1(),getEdge2()));
 
-	this->normal = glm::normalize(glm::cross(getEdge1(), getEdge2()));
+	//d = - n.dot(p1)
+	this->d = - glm::dot(this->point1, this->normal);
+
+
+	
 
 }
 
 glm::vec3 Triangle::getEdge1()
 {
-	return  glm::normalize(point1 - point2);
+	return ( point2 -point1);
 }
 
 glm::vec3 Triangle::getEdge2()
 {
-	return  glm::normalize(point1 - point3);
+	return  (point3 -point1);
 }
 
 glm::vec3 Triangle::getEdge3()
 {
-	return glm::normalize(point2 - point3);
+	return point3 - point2;
 }
 
-bool Triangle::intersect(glm::vec3 p0 , glm::vec3 p1, glm::vec3 &Q)
+
+
+bool Triangle::intersect4(glm::vec3 r1, glm::vec3 r2, glm::vec3 & Q)
 {
-	/*glm::vec3 diff1 = p0 - this->point1;
-	glm::vec3 diff2 = p1 - this->point1;
 
-	float dot1 = glm::dot(diff1, this->normal);
-	float dot2 = glm::dot(diff2, this->normal);
+	//calculate t = - ( n.r1 - d) / n.( r2-r1)
 
-	if (dot1*dot2 < 0.0f) {
+	double eps = std::numeric_limits<double>::epsilon();
+	
+	glm::vec3 diff = r2 - r1;
+
+	//make sure the denom isnt zero <=> the segment isnt parallel to the plane of the triangle
+	float denom = glm::dot(this->normal, diff);
+
+	if (fabs(denom) < eps) {
+		return false;
+	}
+
+
+	// find the value of the parameter t at which intersection occured along the segment from r1 to r2 and make sure its between 0 and 1 and then find the intersection point via the t parameter
+	float t = -(glm::dot(r1, this->normal) + this->d) / denom;
+
+	if ( !(t >= -5.0f && t <= 1.0f) ) {
+		return false;
+	}
+
+
+
+	Q = r1 + t * diff;
+
+	//calculate the three areas of sub triangles and compare them to the area of the whole triangle
+
+	/*Triangle t1(Q, this->point1, this->point2);
+	Triangle t2(Q, this->point1, this->point3);
+	Triangle t3(Q, this->point2, this->point3);
+
+	float area_triangle = getArea();
+
+	float area_t1 = t1.getArea();
+	float area_t2 = t2.getArea();
+	float area_t3 = t3.getArea();
+
+	float sum = area_t1 + area_t2 + area_t3;
+
+
+	if ( !(fabs(sum - area_triangle) < eps) ) {
+		return false;
+
+	}*/
+
+
+	glm::vec3 n21 = glm::normalize(glm::cross(this->normal, getEdge1()));
+	float d21 = -glm::dot(this->point1, n21);
+
+	if (glm::dot(n21, Q) + d21 <= 0) {
+
+		return false;
+	}
+
+	glm::vec3 n31 = glm::normalize(glm::cross(this->normal, -getEdge2()));
+	float d31 = - glm::dot(this->point3, n31);
+
+	if (glm::dot(n31, Q) + d31 <= 0) {
+
+		return false;
+	}
+
+	glm::vec3 n32 = glm::normalize(glm::cross(this->normal, getEdge3()));
+	float d32 = -glm::dot(this->point2, n32);
+
+	if (glm::dot(n32, Q) + d32 <= 0) {
+
+		return false;
+	}
+
+
+
+	/*if (!pointInTriangle(Q)) {
+
 		return false;
 	}*/
 
-	glm::vec3 raydir = p1 - p0;
-	float t;
-	if (!pointIntersectPlane(p0, raydir, t)) {
-		return false;
-	}
-	 Q = p0 + t * raydir;
-
-	if (!pointInTriangle(Q)) {
-		return false;
-	}
-	
 	return true;
 }
 
-bool Triangle::intersect2(glm::vec3 p0, glm::vec3 p1, glm::vec3 & Q)
+
+void Triangle::update(glm::mat4 transform /*glm::vec3 translate*/)
 {
-	glm::vec3 c = (p1 - p0)*(1.0f / 60.0f);
-	
-	if (glm::dot(c, this->normal) > 0.0f) {
-		return false;
-	}
-	float t = (glm::dot(this->normal, this->point1 - p0) / glm::dot(this->normal, c));
-	if (!(t >= 0.0f && t <= 1.0f)) {
-		return false;
-	}
-	Q = p0 + c * t;
+	this->point1 =  transform * glm::vec4(this->point1, 1.0f) ;
+	this->point2 =   transform * glm::vec4(this->point2, 1.0f) ;
+	this->point3 =  transform  * glm::vec4(this->point3, 1.0f)  ;
 
-	if (!pointInTriangle(Q)) {
-		return false;
-	}
+	this->d = -glm::dot(this->point1, this->normal);
 
-	return true;
+	/*this->point1 += translate;
+	this->point2 += translate;
+	this->point3 += translate;
+	this->d = -glm::dot(this->point1, this->normal);*/
+	//this->normal = glm::normalize(glm::cross(getEdge1(), getEdge2()));
+
 }
 
-bool Triangle::intersect3(glm::vec3 p0, glm::vec3 p1, glm::vec3 &Q)
+void Triangle::scale(float value)
 {
-	float da = glm::dot(this->normal, p0 - this->point1);
-	float db = glm::dot(this->normal, p1 - this->point1);
+	this->point1 = this->point1*value;
+	this->point2 = this->point2*value;
+	this->point3 = this->point3*value;
 
-	if (db*da >= 0.0f) {
-		return false;
-	}
-	Q = (da*p1 - (db * p0) ) / (da - db);
-
-	glm::vec3 p3p1 = (this->point3 - this->point1);
-	glm::vec3 p2p3 = (this->point2 - this->point3);
-	glm::vec3 p1p2 = (this->point1 - this->point2);
-
-	glm::vec3 Qp1 = (Q - this->point1);
-	glm::vec3 Qp3 = (Q - this->point3);
-	glm::vec3 Qp2 = (Q - this->point2);
+	this->d = -glm::dot(this->point1, this->normal);
 
 
-	if (glm::dot(Qp1, glm::cross(p3p1, this->normal)) <= 0.0f) {
-		return false;
-	}
-	if (glm::dot(Qp3, glm::cross(p2p3, this->normal)) <= 0.0f) {
-		return false;
-	}
-	if (glm::dot(Qp2, glm::cross(p1p2, this->normal)) <= 0.0f) {
-		return false;
-	}
+}
 
-	return true;
+void Triangle::scale(glm::mat4 mat)
+{
+	this->point1 = mat * glm::vec4(this->point1, 1.0f);
+	this->point2 = mat * glm::vec4(this->point2, 1.0f);
+	this->point3 = mat * glm::vec4(this->point3, 1.0f);
+
+	this->d = -glm::dot(this->point1, this->normal);
+
+
 }
 
 bool Triangle::pointInTriangle(glm::vec3 p)
 {
-	//translate points to the p as new origin
-	glm::vec3 a = this->point1 - p;
-	glm::vec3 b = this->point2 - p;
-	glm::vec3 c = this->point3 - p;
+	glm::vec3 point1_t = this->point1 - p;
+	glm::vec3 point2_t = this->point2 - p;
+	glm::vec3 point3_t = this->point3 - p;
 
-	glm::vec3 u = glm::cross(b, c);
-	glm::vec3 v = glm::cross(c, a);
+	float ab = glm::dot(point1_t, point2_t);
+	float ac = glm::dot(point1_t, point3_t);
+	float bc = glm::dot(point2_t, point3_t);
+	float cc = glm::dot(point3_t, point3_t);
 
-
-	if (glm::dot(u, v) < 0.0f) {
+	if ( ( (bc*ac) - (cc*ab) ) < 0.0f) {
 		return false;
 	}
 
-	glm::vec3 w = glm::cross(a, b);
 
-	if (glm::dot(u, w) < 0.0f) {
+	float bb = glm::dot(point2_t, point2_t);
+
+	if ( ( (ab *bc) - (ac*bb) ) < 0.0f) {
 		return false;
 	}
-
-	
-	/*float ab = glm::dot(a, b);
-	float ac = glm::dot(c, a);
-	float bc = glm::dot(b,c);
-	
-	float cc = glm::dot(c, c);
-
-	if (bc*ac - cc * ab < 0.0f)
-	{
-		return false;
-	}
-	float bb = glm::dot(b, b);
-
-	if (ab*bc - ac * bb < 0.0f)
-	{
-		return false;
-	}
-*/
 
 	return true;
-
-
 }
 
-bool Triangle::pointIntersectPlane(glm::vec3 p, glm::vec3 dir, float & t)
+float Triangle::getArea()
 {
+	glm::vec3 p2p1 = getEdge1();
 
-	float denom = glm::dot(this->normal, dir);
+	glm::vec3 p3p1 = getEdge2();
 
-	if (abs(denom) > 1e-6) {
+	glm::vec3 cross = glm::cross(p2p1, p3p1);
 
-		glm::vec3 diff = this->point1 - p;
-		t = glm::dot(diff, this->normal) / denom;
-		return (t >= 0.0f && t <=1.0f);
-	}
-	return false;
-
-}
-
-void Triangle::update(glm::mat4 transform)
-{
-	this->point1 = glm::vec4(this->point1, 0.0f) * transform;
-	this->point2 = glm::vec4(this->point2, 0.0f) * transform;
-	this->point3 = glm::vec4(this->point3, 0.0f) * transform;
-
+	return (0.5f * glm::length(cross) );
+	
 }
 
 

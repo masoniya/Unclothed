@@ -23,7 +23,7 @@ void DeformableBody::applyWind()
 	float time = glfwGetTime();
 	timer += 0.004f;
 
-	float length = 4.0f;
+	float length = 100.0f;
 	for (PointMass* point : points) {
 
 		glm::vec3 pos = point->getPosition();
@@ -60,60 +60,37 @@ void DeformableBody::collide(RigidShape * shape)
 
 		glm::vec3 dir = glm::vec3(0.0f, 0.0f, 0.0f);
 
+		for (Triangle * triangle : shape->triangles) {
 
 
-		if (shape->intersectPoint(p1, dir)) {
+			if (triangle->intersect4(p0, p1, Q)) {
 
-			point->position = shape->center + shape->radius*dir;
-			glm::vec3 Vn = glm::dot(dir, vel) * dir;
-			glm::vec3 Vt = vel - Vn;
-			//Vt =glm::normalize(Vt);
-			point->setVelocity(/*0.2f*Vt*/ - Vn);
+				//std::cout << "heyy";
+				point->position = Q ;
+				glm::vec3 Vn = glm::dot(triangle->normal, vel) * triangle->normal;
+				glm::vec3 Vt = vel - Vn;
+				point->setVelocity(Vt -Vn);
 
-			//point->collides = true;
+			}
 
-
-
-			/*glm::vec3  force = Vn;
-			point->addForce(force);*/
-
-			//std::cout << "intersection";
-		/*}*/
-
-
-		/*for (Triangle* triangle : shape->triangles) {
-
-
-			if (triangle->intersect(p0, p1,Q)) {*/
-
-
-			/*glm::vec3 Vn = glm::dot(triangle->normal, vel)*vel;
-			glm::vec3 Vt = vel - Vn;
-
-			glm::vec3  force = triangle->normal*2.0f;
-			point->addForce(force);
-			point->setVelocity(Vt - 0.4f*Vn);
-			point->setImmovable();
-			point->setPosition(p0);*/
-			//std::cout << "hey";
-
-			//point->position = Q;
 
 		}
-		/*else {
-			std::cout << "nope";
-		}*/
 
+		//for intersecting with fake sphere
 
-		/*}*/
+		//if (shape->intersectPoint(p1, dir)) {
 
+		//	point->position = shape->center + shape->radius*dir;
+		//	glm::vec3 Vn = glm::dot(dir, vel) * dir;
+		//	glm::vec3 Vt = vel - Vn;
+		//	//Vt =glm::normalize(Vt);
+		//	point->setVelocity(Vt  -Vn);
 
-
-
-	/*}*/
-
-
+		//
+		//}
 
 
 	}
+
+	
 }
